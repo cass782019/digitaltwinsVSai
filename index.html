@@ -64,6 +64,8 @@
   .three b { display:block; font-size:28px; }
   .three .t { background:#E6EEF7; } .three .t b { color:var(--navy); }
   .err { color:var(--red); font-size:14px; margin-top:8px; }
+  .planb { display:none; background:#FFF4D6; border:1px solid var(--yellow,#FDB913); color:#5A4300; border-radius:8px; padding:8px 12px; margin:10px 0 0; font-size:14px; }
+  .planb.show { display:block; }
   .meta { font-size:12px; color:var(--muted); margin-top:6px; }
   .outscope { display:none; background:#FFE3E3; color:#8A1F1F; border-radius:10px; padding:10px 12px; font-size:17px; font-weight:700; margin-top:8px; }
   .es2 { display:block; font-size:.78em; color:#5A6B80; font-style:italic; font-weight:500; margin-top:2px; }
@@ -106,6 +108,7 @@
       <div class="chips" id="chips"></div>
       <div class="vote"><span data-t="vote"></span> <input id="vote" type="number" step="1" placeholder="%"> %</div>
       <button class="go" id="go"><span data-t="run"></span><span class="spinner">⏳</span></button>
+      <div class="planb" id="planb"></div>
       <div class="err" id="err"></div>
     </div>
   </section>
@@ -151,6 +154,8 @@ const T = {
    all:"all products",weeks:"weeks",units:"units",again:"↻ Ask the AI again",thinking:"⏳ The AI is thinking",room:"The room",ai_short:"The AI",twin_short:"The twin",
    outscope:"This question is outside this simple model. It only understands demand, price, supplier delay and extra stock.",
    adjusted:"adjusted to the model's limit",offline:"AI not available — use ⏯ Rehearsal (recorded answers).",replay_btn:"Rehearsal",
+   auto_planb:"⏯ No internet / AI not available: Rehearsal mode switched on automatically. The AI answers are the recorded ones; the twin still calculates live.",
+   closest:"Free question without AI: showing the closest recorded scenario →",
    replay_note:"Recorded rehearsal answers",
    presets:["What if our supplier is 2 weeks late on everything from week 2?","What if a heat wave increases ice cream demand by 80% from week 2?","Heat wave: ice cream +80%, but we keep 300 extra ice creams on the shelf.","What if we cut the coffee price by 20%?"]},
  es:{powered:"Desarrollado por <b>Cassiano R. N. Moralles</b> · Unilasalle",title:"Gemelo de la Tienda",tag:"La IA adivina · el gemelo calcula",store:"Tienda de ejemplo (datos inventados) — semana normal",p_ice:"Helado",p_water:"Agua",p_coffee:"Café",wk:"sem",
@@ -162,6 +167,8 @@ const T = {
    all:"todos los productos",weeks:"semanas",units:"unid.",again:"↻ Preguntar de nuevo a la IA",thinking:"⏳ La IA está pensando",room:"La sala",ai_short:"La IA",twin_short:"El gemelo",
    outscope:"Esta pregunta está fuera de este modelo simple. Solo entiende demanda, precio, retraso del proveedor y stock extra.",
    adjusted:"ajustado al límite del modelo",offline:"IA no disponible — use ⏯ Ensayo (respuestas grabadas).",replay_btn:"Ensayo",
+   auto_planb:"⏯ Sin internet / IA no disponible: modo Ensayo activado automáticamente. Las respuestas de la IA son las grabadas; el gemelo sigue calculando en vivo.",
+   closest:"Pregunta libre sin IA: se muestra el escenario grabado más parecido →",
    replay_note:"Respuestas grabadas del ensayo",
    presets:["¿Y si nuestro proveedor se retrasa 2 semanas en todo desde la semana 2?","¿Y si una ola de calor aumenta la demanda de helado un 80% desde la semana 2?","Ola de calor: helado +80%, pero mantenemos 300 helados extra en el estante.","¿Y si bajamos el precio del café un 20%?"]},
  pt:{powered:"Desenvolvido por <b>Cassiano R. N. Moralles</b> · Unilasalle",title:"Gêmeo da Loja",tag:"A IA chuta · o gêmeo calcula",store:"Loja de exemplo (dados inventados) — semana normal",p_ice:"Sorvete",p_water:"Água",p_coffee:"Café",wk:"sem",
@@ -173,6 +180,8 @@ const T = {
    all:"todos os produtos",weeks:"semanas",units:"unid.",again:"↻ Perguntar de novo à IA",thinking:"⏳ A IA está pensando",room:"A sala",ai_short:"A IA",twin_short:"O gêmeo",
    outscope:"Esta pergunta está fora deste modelo simples. Ele só entende demanda, preço, atraso do fornecedor e estoque extra.",
    adjusted:"ajustado ao limite do modelo",offline:"IA indisponível — use ⏯ Ensaio (respostas gravadas).",replay_btn:"Ensaio",
+   auto_planb:"⏯ Sem internet / IA indisponível: modo Ensaio ligado automaticamente. As respostas da IA são as gravadas; o gêmeo continua calculando ao vivo.",
+   closest:"Pergunta livre sem IA: mostrando o cenário gravado mais parecido →",
    replay_note:"Respostas gravadas do ensaio",
    presets:["E se o fornecedor atrasar 2 semanas em tudo a partir da semana 2?","E se uma onda de calor aumentar a procura por sorvete em 80% a partir da semana 2?","Onda de calor: sorvete +80%, mas mantemos 300 sorvetes a mais na prateleira.","E se baixarmos o preço do café em 20%?"]}
 };
@@ -192,6 +201,7 @@ const dec=v=>(lang==="en"||lang==="bi")?String(v):String(v).replace(".",",");
 const fmtPct=v=>{const n=Math.round(Number(v)*10)/10; return (n>0?"+":"")+dec(n)+"%";};
 const fmtUSD=v=>"US$ "+Math.round(v).toLocaleString((lang==="en"||lang==="bi")?"en-US":(lang==="es"?"es-ES":"pt-BR"));
 function setLang(l){
+  setTimeout(()=>{ if(replayMode&&$("planb").classList.contains("show")) setReplay(true,true); },0);
   lang=l; document.documentElement.lang=l==="bi"?"en":l; document.body.classList.toggle("bi",l==="bi");
   document.querySelectorAll("[data-t]").forEach(e=>e.innerHTML=T[l][e.dataset.t]);
   document.querySelectorAll("header button[data-l]").forEach(b=>b.classList.toggle("on",b.dataset.l===l));
@@ -202,7 +212,15 @@ function setLang(l){
     b.onclick=()=>{$("q").value=qtext;presetIdx=i;document.querySelectorAll(".chip").forEach(c=>c.classList.remove("sel"));b.classList.add("sel");};$("chips").appendChild(b);});
 }
 document.querySelectorAll("header button[data-l]").forEach(b=>b.onclick=()=>setLang(b.dataset.l));
-$("offline").onclick=()=>{replayMode=!replayMode;$("offline").classList.toggle("on",replayMode);};
+function setReplay(on,auto){
+  replayMode=on; $("offline").classList.toggle("on",on);
+  const pb=$("planb");
+  if(on&&auto){ pb.innerHTML=lang==="bi"?`${T.en.auto_planb}<br><span class="es2">${T.es.auto_planb}</span>`:T[lang].auto_planb; pb.classList.add("show"); }
+  else if(!on) pb.classList.remove("show");
+}
+$("offline").onclick=()=>setReplay(!replayMode,false);
+// EN: at start-up, if the AI is unreachable, switch Plan B on by itself. ES: al iniciar, si la IA no responde, activa el plan B solo.
+fetch("/api/health").then(r=>r.json()).then(h=>{ if(!h.ai_online) setReplay(true,true); }).catch(()=>setReplay(true,true));
 $("q").addEventListener("input",()=>{presetIdx=null;document.querySelectorAll(".chip").forEach(c=>c.classList.remove("sel"));});
 
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -210,7 +228,7 @@ function show(id){$(id).classList.add("on");}
 function reset(){["s1","s2","s3","s4"].forEach(i=>$(i).classList.remove("on"));
   ["g_rev","g_srv","t_rev","t_mar","t_srv","t_lost"].forEach(i=>{$(i).firstChild.textContent="–";$(i).className="big";});
   ["restated","params","g_txt","chart","expl","meta","err","tries","c_room","c_ai","c_twin"].forEach(i=>$(i).innerHTML="");
-  $("outscope").style.display="none"; $("again").style.display="none"; tries=[];}
+  $("outscope").style.display="none"; $("again").style.display="none"; tries=[]; replayData=null;}
 
 function paramPills(p,adj){
   const t=T[lang],names={ice_cream:t.p_ice,water:t.p_water,coffee:t.p_coffee,all:t.all},A={};
@@ -260,12 +278,21 @@ $("go").onclick=async()=>{
   const v=$("vote").value; $("c_room").textContent=v===""?"–":fmtPct(v);
   try{
     let d;
-    if(replayMode){
-      if(presetIdx===null) throw new Error("rehearsal: pick 1–4");
-      d=await post("/api/replay",{idx:presetIdx,lang:lang==="pt"?"en":lang}); replayData=d;
-      if(lang==="bi"&&d.guesses_es) d.guesses=d.guesses.map((g,i)=>({...g,sentence_es:(d.guesses_es[i]||{}).sentence}));
-      if(lang==="bi") d.guess=d.guesses[0];
-    } else d=await post("/api/ask",{question:q,lang});
+    const doReplay=async()=>{
+      const r=await post("/api/replay",{idx:presetIdx,question:q,lang:lang==="pt"?"en":lang}); replayData=r;
+      if(lang==="bi"&&r.guesses_es) r.guesses=r.guesses.map((g,i)=>({...g,sentence_es:(r.guesses_es[i]||{}).sentence}));
+      if(lang==="bi") r.guess=r.guesses[0];
+      if(presetIdx===null){   // free question: say which recorded scenario is shown
+        const name=T[lang==="bi"?"en":lang].presets[r.scenario_idx];
+        $("err").innerHTML=`<span style="color:#5A4300">${T[lang==="bi"?"en":lang].closest} “${esc(name)}”</span>`;
+      }
+      return r;
+    };
+    if(replayMode) d=await doReplay();
+    else {
+      try{ d=await post("/api/ask",{question:q,lang}); }
+      catch(e){ setReplay(true,true); d=await doReplay(); }   // AI dropped mid-talk: fall back by itself
+    }
     $("restated").innerHTML=lang==="bi"?two(d.restated_en||d.restated||q,d.restated_es):esc(d.restated||q);
     $("params").innerHTML=paramPills(d.twin.params,d.twin.adjusted); show("s1");
     if(!d.twin.in_scope){ $("outscope").innerHTML=T[lang].outscope; $("outscope").style.display="block"; return; }
@@ -289,8 +316,12 @@ $("again").onclick=async()=>{
   const t0=Date.now();
   try{
     let g;
-    if(replayMode&&replayData){ g=replayData.guesses[tries.length % replayData.guesses.length]; }
-    else { g=(await post("/api/guess",{question:lastQ,lang})).guess; }
+    const recorded=async()=>{
+      if(!replayData) replayData=await post("/api/replay",{idx:presetIdx,question:lastQ,lang:lang==="pt"?"en":lang});
+      return replayData.guesses[tries.length % replayData.guesses.length];
+    };
+    if(replayMode) g=await recorded();
+    else { try{ g=(await post("/api/guess",{question:lastQ,lang})).guess; } catch(e){ setReplay(true,true); g=await recorded(); } }
     const wait=900-(Date.now()-t0); if(wait>0) await sleep(wait);   // always visible for at least ~1 s
     showGuess(g);
   }catch(e){ $("err").innerHTML=T[lang].offline+" ("+esc(e.message)+")"; }

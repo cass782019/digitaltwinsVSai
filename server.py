@@ -17,6 +17,7 @@ import os
 import sys
 import threading
 import time
+import urllib.error
 import urllib.request
 import webbrowser
 from concurrent.futures import ThreadPoolExecutor
@@ -43,6 +44,7 @@ load_dotenv()
 PORT = int(os.environ.get("DEMO_PORT", "8765"))
 MODELS = [os.environ.get("DEMO_MODEL", "gpt-oss:120b"), os.environ.get("DEMO_FALLBACK_MODEL", "glm-5.3-flash")]
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "https://ollama.com/api/chat")
+AI_TIMEOUT = float(os.environ.get("DEMO_AI_TIMEOUT", "20"))   # seconds per AI call before falling back to the rehearsal
 WEEKS = 8
 
 # ---------------------------------------------------------------- the twin
@@ -178,16 +180,34 @@ def llm(system, user, want_json=True, temperature=0.2):
                                               "Content-Type": "application/json"})
         try:
             t0 = time.time()
-            with urllib.request.urlopen(req, timeout=60) as r:
+            with urllib.request.urlopen(req, timeout=AI_TIMEOUT) as r:
                 out = json.load(r)["message"]["content"]
             txt = out.strip()
             if want_json:
                 txt = txt[txt.find("{"): txt.rfind("}") + 1]
                 return json.loads(txt), model, round(time.time() - t0, 1)
             return txt, model, round(time.time() - t0, 1)
+        except urllib.error.URLError as e:
+            last = e
+            if not isinstance(getattr(e, "reason", None), str) and not hasattr(e, "code"):
+                break  # network down (DNS, no route, timeout): the fallback model would fail too
         except Exception as e:  # try the fallback model
             last = e
     raise RuntimeError(f"LLM failed: {last}")
+
+
+def ai_online(timeout=4):
+    """EN: quick check that the AI service is reachable. ES: verificación rápida de que la IA responde."""
+    if not api_key():
+        return False
+    try:
+        host = OLLAMA_URL.split("/api/")[0]
+        urllib.request.urlopen(urllib.request.Request(host, method="HEAD"), timeout=timeout)
+        return True
+    except urllib.error.HTTPError:
+        return True   # the server answered (any HTTP status means we are online)
+    except Exception:
+        return False
 
 
 LANG = {"en": "English", "es": "Spanish", "pt": "Brazilian Portuguese"}
@@ -264,14 +284,34 @@ def handle_ask(q, lang):
     return out
 
 
-def replay(idx, lang):
+REPLAY_KEYWORDS = [  # EN / ES / PT words that point to each recorded scenario
+    ["supplier", "late", "delay", "proveedor", "retras", "fornecedor", "atras"],
+    ["heat", "calor", "ice cream", "helado", "sorvete", "80"],
+    ["extra", "300", "stock", "estoque", "mantenemos", "mantemos", "keep"],
+    ["coffee", "café", "cafe", "price", "precio", "preço", "preco", "-20", "20%"],
+]
+
+
+def closest_scenario(question):
+    """EN: pick the recorded scenario closest to a free-text question. ES: elige el escenario grabado más parecido."""
+    q = (question or "").lower()
+    score = [sum(k in q for k in kws) for kws in REPLAY_KEYWORDS]
+    if score[2] and score[1]:          # heat wave + extra stock -> scenario 3, not 2
+        return 2
+    best = max(range(4), key=lambda i: score[i])
+    return best if score[best] else 0
+
+
+def replay(idx, lang, question=None):
     """Offline plan B: real rehearsal answers (ensaio_v2.json) + live twin calculation."""
     data = json.loads((HERE / "ensaio_v2.json").read_text(encoding="utf-8"))
+    if idx is None:
+        idx = closest_scenario(question)
     base = "es" if lang == "es" else "en"
     r = data["runs"][base][int(idx)]
     out = {"ai": False, "replay": True, "twin": run_twin(r["params"]), "restated": r["restated"],
            "guess": r["guesses"][0], "guesses": r["guesses"], "explanation": r["explanation"],
-           "recorded_at": data["run_at"]}
+           "recorded_at": data["run_at"], "scenario_idx": int(idx)}
     if lang == "bi":
         r_es = data["runs"]["es"][int(idx)]
         out.update(restated_en=r["restated"], restated_es=r_es["restated"], explanation_es=r_es["explanation"],
@@ -294,7 +334,7 @@ class H(BaseHTTPRequestHandler):
         if self.path == "/logo_unilasalle.png":
             return self._send(200, (HERE / "logo_unilasalle.png").read_bytes(), "image/png")
         if self.path == "/api/health":
-            return self._send(200, {"ok": True, "has_key": bool(api_key())})
+            return self._send(200, {"ok": True, "has_key": bool(api_key()), "ai_online": ai_online()})
         self._send(404, {"error": "not found"})
 
     def do_POST(self):
@@ -306,7 +346,7 @@ class H(BaseHTTPRequestHandler):
             if self.path == "/api/guess":
                 return self._send(200, handle_guess(body.get("question", ""), body.get("lang", "en")))
             if self.path == "/api/replay":
-                return self._send(200, replay(body.get("idx", 0), body.get("lang", "en")))
+                return self._send(200, replay(body.get("idx"), body.get("lang", "en"), body.get("question")))
             if self.path == "/api/twin":
                 return self._send(200, {"ai": False, "twin": run_twin(body.get("params", {}))})
         except Exception as e:
