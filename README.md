@@ -5,6 +5,8 @@
 <sub>International Business Week · Unilasalle-RS · 11/11/2026 · MIT</sub>
 </p>
 
+![Pantalla de la demo (modo EN+ES) / Demo screen (EN+ES mode)](docs/screenshot_en-es.png)
+
 <table>
 <tr>
 <th width="50%">🇪🇸 Español</th>
@@ -12,7 +14,7 @@
 </tr>
 
 <tr>
-<td valign="top">
+<td valign="top" width="50%">
 
 Demo didáctica para la **International Business Week** (Unilasalle-RS). Muestra a un público de negocios, sin conocimientos técnicos, cómo trabajan juntos la **IA generativa** y un **gemelo digital**:
 
@@ -24,7 +26,7 @@ Demo didáctica para la **International Business Week** (Unilasalle-RS). Muestra
 **Mensaje:** *la IA conversa, el gemelo calcula, y ambos deben compararse con la realidad.*
 
 </td>
-<td valign="top">
+<td valign="top" width="50%">
 
 A teaching demo for **International Business Week** (Unilasalle-RS). It shows a business audience, with no technical background needed, how **generative AI** and a **digital twin** work together:
 
@@ -34,14 +36,6 @@ A teaching demo for **International Business Week** (Unilasalle-RS). It shows a 
 4. **Compare** the room's guess, the AI's guess and the twin's result side by side.
 
 **Message:** *the AI talks, the twin calculates, and both must be checked against reality.*
-
-</td>
-</tr>
-
-<tr>
-<td colspan="2" align="center">
-
-<img src="docs/screenshot_en-es.png" alt="Pantalla de la demo (modo EN+ES) / Demo screen (EN+ES mode)" width="100%">
 
 </td>
 </tr>
@@ -97,67 +91,26 @@ The model only changes **4 things**: **demand**, **price**, **supplier delay** a
 
 ### Cómo ejecutarla
 
-Requisitos: **Python 3.9+** (solo biblioteca estándar) y una clave de **Ollama Cloud**.
+Requisitos: **Python 3.9+** (solo biblioteca estándar, nada que instalar) y una clave de **Ollama Cloud**.
 
-```bash
-git clone https://github.com/cass782019/digitaltwinsVSai.git
-cd digitaltwinsVSai
-cp .env.example .env
-# edite .env: OLLAMA_API_KEY=...
-python server.py
-```
-
-En Windows: `copy .env.example .env` y doble clic en `INICIAR_DEMO.bat`. Abre http://127.0.0.1:8765.
+Copie `.env.example` como `.env`, complete `OLLAMA_API_KEY` y ejecute `python server.py`. En Windows: doble clic en `INICIAR_DEMO.bat`. Se abre en http://127.0.0.1:8765.
 
 Sin clave la página igual abre: use **⏯ Ensayo** con los 4 escenarios predefinidos.
+
+Comandos y configuración: ver [abajo](#inicio-rápido--quick-start).
 
 </td>
 <td valign="top">
 
 ### Run it
 
-Requirements: **Python 3.9+** (standard library only) and an **Ollama Cloud** key.
+Requirements: **Python 3.9+** (standard library only, nothing to install) and an **Ollama Cloud** key.
 
-```bash
-git clone https://github.com/cass782019/digitaltwinsVSai.git
-cd digitaltwinsVSai
-cp .env.example .env
-# edit .env: OLLAMA_API_KEY=...
-python server.py
-```
-
-On Windows: `copy .env.example .env` and double-click `INICIAR_DEMO.bat`. Opens http://127.0.0.1:8765.
+Copy `.env.example` to `.env`, set `OLLAMA_API_KEY` and run `python server.py`. On Windows: double-click `INICIAR_DEMO.bat`. It opens at http://127.0.0.1:8765.
 
 Without a key the page still opens: use **⏯ Rehearsal** with the 4 preset scenarios.
 
-</td>
-</tr>
-
-<tr>
-<td valign="top">
-
-### Configuración (`.env`)
-
-| Variable | Por defecto | Uso |
-|---|---|---|
-| `OLLAMA_API_KEY` | — | Clave de Ollama Cloud (**nunca la suba**) |
-| `OLLAMA_URL` | `https://ollama.com/api/chat` | Endpoint (Ollama local: `http://localhost:11434/api/chat`) |
-| `DEMO_MODEL` | `gpt-oss:120b` | Modelo principal |
-| `DEMO_FALLBACK_MODEL` | `glm-5.3-flash` | Modelo de respaldo |
-| `DEMO_PORT` | `8765` | Puerto local |
-
-</td>
-<td valign="top">
-
-### Configuration (`.env`)
-
-| Variable | Default | Use |
-|---|---|---|
-| `OLLAMA_API_KEY` | — | Ollama Cloud key (**never commit it**) |
-| `OLLAMA_URL` | `https://ollama.com/api/chat` | Endpoint (local Ollama: `http://localhost:11434/api/chat`) |
-| `DEMO_MODEL` | `gpt-oss:120b` | Main model |
-| `DEMO_FALLBACK_MODEL` | `glm-5.3-flash` | Fallback model |
-| `DEMO_PORT` | `8765` | Local port |
+Commands and configuration: see [below](#inicio-rápido--quick-start).
 
 </td>
 </tr>
@@ -167,26 +120,22 @@ Without a key the page still opens: use **⏯ Rehearsal** with the 4 preset scen
 
 ### Archivos
 
-| Archivo | Qué es |
-|---|---|
-| `server.py` | Servidor local, simulador (el gemelo) y prompts de la IA |
-| `index.html` | Toda la interfaz (ES / EN / EN+ES / PT) |
-| `ensaio_v2.json` | Ensayo grabado (10/11/2026, `gpt-oss:120b`), usado por **Ensayo** |
-| `ensaio_2026-11-10.json` | Primer ensayo (por transparencia) |
-| `.env.example` | Plantilla de configuración |
+- `server.py`: servidor local, simulador (el gemelo) y prompts de la IA.
+- `index.html`: toda la interfaz (ES / EN / EN+ES / PT).
+- `ensaio_v2.json`: ensayo grabado (10/11/2026, `gpt-oss:120b`), usado por **Ensayo**.
+- `ensaio_2026-11-10.json`: primer ensayo (por transparencia).
+- `.env.example`: plantilla de configuración.
 
 </td>
 <td valign="top">
 
 ### Files
 
-| File | What it is |
-|---|---|
-| `server.py` | Local server, simulator (the twin) and AI prompts |
-| `index.html` | The whole interface (ES / EN / EN+ES / PT) |
-| `ensaio_v2.json` | Recorded rehearsal (10 Nov 2026, `gpt-oss:120b`), used by **Rehearsal** |
-| `ensaio_2026-11-10.json` | First rehearsal (kept for transparency) |
-| `.env.example` | Configuration template |
+- `server.py`: local server, simulator (the twin) and AI prompts.
+- `index.html`: the whole interface (ES / EN / EN+ES / PT).
+- `ensaio_v2.json`: recorded rehearsal (10 Nov 2026, `gpt-oss:120b`), used by **Rehearsal**.
+- `ensaio_2026-11-10.json`: first rehearsal (kept for transparency).
+- `.env.example`: configuration template.
 
 </td>
 </tr>
@@ -231,3 +180,26 @@ The Unilasalle name and logo are not covered by the license.
 </td>
 </tr>
 </table>
+
+## Inicio rápido · Quick start
+
+```bash
+git clone https://github.com/cass782019/digitaltwinsVSai.git
+cd digitaltwinsVSai
+cp .env.example .env    # Windows: copy .env.example .env
+# ES: edite .env y complete OLLAMA_API_KEY
+# EN: edit .env and set OLLAMA_API_KEY
+python server.py
+```
+
+### Configuración · Configuration (`.env`)
+
+| Variable | Por defecto · Default | ES | EN |
+|---|---|---|---|
+| `OLLAMA_API_KEY` | — | Clave de Ollama Cloud (**nunca la suba**) | Ollama Cloud key (**never commit it**) |
+| `OLLAMA_URL` | `https://ollama.com/api/chat` | Endpoint de chat | Chat endpoint |
+| `DEMO_MODEL` | `gpt-oss:120b` | Modelo principal | Main model |
+| `DEMO_FALLBACK_MODEL` | `glm-5.3-flash` | Modelo de respaldo | Fallback model |
+| `DEMO_PORT` | `8765` | Puerto local | Local port |
+
+ES: para Ollama local use `OLLAMA_URL=http://localhost:11434/api/chat`. · EN: for a local Ollama use `OLLAMA_URL=http://localhost:11434/api/chat`.
