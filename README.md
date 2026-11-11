@@ -12,7 +12,7 @@
 ## 🎬 Video de la demo · Demo video
 
 <p align="center">
-<a href="docs/video/demo_es-en.mp4"><img src="docs/video/poster.png" alt="Ver el video de la demo (2:36) / Watch the demo video (2:36)" width="720"></a>
+<a href="docs/video/demo_es-en.mp4?raw=true"><img src="docs/video/poster.png" alt="Ver el video de la demo (2:36) / Watch the demo video (2:36)" width="720"></a>
 </p>
 
 <table>
@@ -21,14 +21,14 @@
 
 **2 min 36 s**, modo bilingüe ES+EN, narración en español. Grabado con la **IA real** (gpt-oss:120b en Ollama Cloud): el proveedor atrasado (la IA dice −30 %, −25 %, −25 %; el gemelo, −35 %) y el café con −20 % de precio (la IA, −1,8 %, −0,9 %, −3,6 %; el gemelo, −2,8 % y margen −13 %).
 
-Haga clic en la imagen para abrir el video. [Descargar MP4](docs/video/demo_es-en.mp4?raw=true) (11,8 MB).
+Haga clic en la imagen para descargar el video (MP4, 11,8 MB) y verlo en su reproductor. GitHub no reproduce videos guardados en el repositorio dentro del README.
 
 </td>
 <td valign="top" width="50%">
 
 **2 min 36 s**, bilingual ES+EN mode, Spanish narration. Recorded with the **real AI** (gpt-oss:120b on Ollama Cloud): the late supplier (the AI says −30%, −25%, −25%; the twin, −35%) and coffee at −20% price (the AI, −1.8%, −0.9%, −3.6%; the twin, −2.8% and margin −13%).
 
-Click the image to open the video. [Download MP4](docs/video/demo_es-en.mp4?raw=true) (11.8 MB).
+Click the image to download the video (MP4, 11.8 MB) and watch it in your player. GitHub does not play videos stored in the repository inside the README.
 
 </td>
 </tr>
