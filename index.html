@@ -87,7 +87,7 @@
   <h1 data-t="title"></h1><span class="tag" data-t="tag"></span>
   <div class="right">
     <button id="offline" title="Plan B: replay the rehearsal">⏯ <span data-t="replay_btn"></span></button>
-    <button data-l="en">EN</button><button data-l="es">ES</button><button data-l="bi">EN+ES</button><button data-l="pt">PT</button>
+    <button data-l="en">EN</button><button data-l="es">ES</button><button data-l="bi">ES+EN</button><button data-l="pt">PT</button>
   </div>
 </header>
 <div class="banner" data-t="banner"></div>
@@ -191,23 +191,26 @@ T.bi={};
 for(const k of Object.keys(T.en)){
   const a=T.en[k], b=T.es[k];
   if(Array.isArray(a)) T.bi[k]=a.map((x,i)=>[x,b[i]]);
-  else T.bi[k]= a===b ? a : (INLINE.has(k) ? `${a} / ${b}` : `${a}<span class="es2">${b}</span>`);
+  else T.bi[k]= a===b ? a : (INLINE.has(k) ? `${b} / ${a}` : `${b}<span class="es2">${a}</span>`);
 }
-const two=(en,es)=>es&&es!==en?`${esc(en)}<span class="es2">${esc(es)}</span>`:esc(en||"");
+// two(en, es): in bilingual mode Spanish is shown first, English second / español primero, inglés segundo
+const two=(en,es)=>es&&es!==en?`${esc(es)}<span class="es2">${esc(en)}</span>`:esc(en||"");
 function esc(s){return String(s??"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
 let lang="en", presetIdx=null, lastQ="", replayMode=false, tries=[], replayData=null;
 const $=id=>document.getElementById(id);
-const dec=v=>(lang==="en"||lang==="bi")?String(v):String(v).replace(".",",");
+const dec=v=>lang==="en"?String(v):String(v).replace(".",",");
 const fmtPct=v=>{const n=Math.round(Number(v)*10)/10; return (n>0?"+":"")+dec(n)+"%";};
-const fmtUSD=v=>"US$ "+Math.round(v).toLocaleString((lang==="en"||lang==="bi")?"en-US":(lang==="es"?"es-ES":"pt-BR"));
+// thousands separator by hand: es-ES leaves 4-digit numbers without a dot (9940), we want 9.940
+// separador de miles a mano: es-ES deja los números de 4 dígitos sin punto (9940), queremos 9.940
+const fmtUSD=v=>"US$ "+String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, lang==="en"?",":".");
 function setLang(l){
   setTimeout(()=>{ if(replayMode&&$("planb").classList.contains("show")) setReplay(true,true); },0);
-  lang=l; document.documentElement.lang=l==="bi"?"en":l; document.body.classList.toggle("bi",l==="bi");
+  lang=l; document.documentElement.lang=l==="bi"?"es":l; document.body.classList.toggle("bi",l==="bi");
   document.querySelectorAll("[data-t]").forEach(e=>e.innerHTML=T[l][e.dataset.t]);
   document.querySelectorAll("header button[data-l]").forEach(b=>b.classList.toggle("on",b.dataset.l===l));
   $("chips").innerHTML="";
   T[l].presets.forEach((p,i)=>{const b=document.createElement("button");b.className="chip";
-    const qtext=Array.isArray(p)?p[0]:p;
+    const qtext=Array.isArray(p)?p[1]:p;   // bilingual: the Spanish question goes to the AI
     b.innerHTML=(i+1)+". "+(Array.isArray(p)?two(p[0],p[1]):esc(p));
     b.onclick=()=>{$("q").value=qtext;presetIdx=i;document.querySelectorAll(".chip").forEach(c=>c.classList.remove("sel"));b.classList.add("sel");};$("chips").appendChild(b);});
 }
@@ -215,7 +218,7 @@ document.querySelectorAll("header button[data-l]").forEach(b=>b.onclick=()=>setL
 function setReplay(on,auto){
   replayMode=on; $("offline").classList.toggle("on",on);
   const pb=$("planb");
-  if(on&&auto){ pb.innerHTML=lang==="bi"?`${T.en.auto_planb}<br><span class="es2">${T.es.auto_planb}</span>`:T[lang].auto_planb; pb.classList.add("show"); }
+  if(on&&auto){ pb.innerHTML=lang==="bi"?`${T.es.auto_planb}<br><span class="es2">${T.en.auto_planb}</span>`:T[lang].auto_planb; pb.classList.add("show"); }
   else if(!on) pb.classList.remove("show");
 }
 $("offline").onclick=()=>setReplay(!replayMode,false);
@@ -256,7 +259,7 @@ function chart(tw){
   W.forEach((w,i)=>{const x=X0+i*(BW+G),hs=H*w.s/max,hl=H*w.l/max;
     svg+=`<rect x="${x}" y="${H-hs}" width="${BW}" height="${hs}" fill="#003E7B" rx="3"/>`;
     if(w.l) svg+=`<rect x="${x}" y="${H-hs-hl}" width="${BW}" height="${hl}" fill="#D64545" rx="3"/>`;
-    svg+=`<text x="${x+BW/2}" y="${H+20}" font-size="14" text-anchor="middle" fill="#555">${lang==="en"?"W":(lang==="bi"?"W/S":"S")}${i+1}</text>`;});
+    svg+=`<text x="${x+BW/2}" y="${H+20}" font-size="14" text-anchor="middle" fill="#555">${lang==="en"?"W":(lang==="bi"?"S/W":"S")}${i+1}</text>`;});
   svg+=`<polyline points="${W.map((w,i)=>`${X0+i*(BW+G)+BW/2},${H-H*w.n/max}`).join(" ")}" fill="none" stroke="#FDB913" stroke-width="4" stroke-dasharray="8 5"/></svg>`;
   $("chart").innerHTML=svg;
 }
@@ -285,11 +288,11 @@ $("go").onclick=async()=>{
     let d;
     const doReplay=async()=>{
       const r=await post("/api/replay",{idx:presetIdx,question:q,lang:lang==="pt"?"en":lang}); replayData=r;
-      if(lang==="bi"&&r.guesses_es) r.guesses=r.guesses.map((g,i)=>({...g,sentence_es:(r.guesses_es[i]||{}).sentence}));
+      if(lang==="bi"&&r.guesses_en) r.guesses=r.guesses.map((g,i)=>({...g,sentence_es:g.sentence,sentence:(r.guesses_en[i]||{}).sentence}));
       if(lang==="bi") r.guess=r.guesses[0];
       if(presetIdx===null){   // free question: say which recorded scenario is shown
-        const name=T[lang==="bi"?"en":lang].presets[r.scenario_idx];
-        $("err").innerHTML=`<span style="color:#5A4300">${T[lang==="bi"?"en":lang].closest} “${esc(name)}”</span>`;
+        const L=lang==="bi"?"es":lang, name=T[L].presets[r.scenario_idx];
+        $("err").innerHTML=`<span style="color:#5A4300">${T[L].closest} “${esc(name)}”</span>`;
       }
       return r;
     };
@@ -304,7 +307,7 @@ $("go").onclick=async()=>{
     await sleep(800); showGuess(d.guess); show("s2"); $("again").style.display="inline-block";
     await sleep(900); renderTwin(d.twin);
     await sleep(700);
-    $("expl").innerHTML=lang==="bi"?`<div>${esc(d.explanation)}</div><div class="es2" style="font-size:.9em;margin-top:8px">${esc(d.explanation_es)}</div>`:esc(d.explanation);
+    $("expl").innerHTML=lang==="bi"?`<div>${esc(d.explanation_es||d.explanation)}</div>${d.explanation_es?`<div class="es2" style="font-size:.9em;margin-top:8px">${esc(d.explanation)}</div>`:""}`:esc(d.explanation);
     show("s4");
     $("meta").innerHTML=d.replay?`${T[lang].replay_note} (${d.recorded_at})`:`AI via Ollama Cloud · ${d.seconds.reduce((a,b)=>a+b,0).toFixed(1)} s`;
   }catch(e){ $("err").innerHTML=T[lang].offline+" ("+esc(e.message)+")"; }
@@ -312,7 +315,7 @@ $("go").onclick=async()=>{
 };
 function thinkingLabel(){
   // "The AI is thinking..." with animated dots; bilingual mode shows both languages
-  if(lang==="bi") return `${T.en.thinking}<span class="dots"></span><span class="es2">${T.es.thinking}<span class="dots"></span></span>`;
+  if(lang==="bi") return `${T.es.thinking}<span class="dots"></span><span class="es2">${T.en.thinking}<span class="dots"></span></span>`;
   return `${T[lang].thinking}<span class="dots"></span>`;
 }
 $("again").onclick=async()=>{

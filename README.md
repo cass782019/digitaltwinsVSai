@@ -5,7 +5,7 @@
 <sub>International Business Week · Unilasalle-RS · 11/11/2026 · MIT</sub>
 </p>
 
-<p align="center"><img src="docs/screenshot_en-es.png" alt="Pantalla de la demo (modo EN+ES) / Demo screen (EN+ES mode)" width="720"></p>
+<p align="center"><img src="docs/screenshot_en-es.png" alt="Pantalla de la demo (modo ES+EN) / Demo screen (ES+EN mode)" width="720"></p>
 
 **Contenido · Contents:** [Arquitectura C4 · C4 architecture](#c4) · [Cómo se simula el gemelo · How the twin is simulated](#simulacion) · [Un gemelo real · A real twin](#gemelo-real) · [Fuentes · Sources](#fuentes) · [Inicio rápido · Quick start](#quick-start)
 
@@ -68,7 +68,7 @@ The model only changes **4 things**: **demand**, **price**, **supplier delay** a
 
 ### Funciones
 
-- Idiomas: **ES**, **EN**, **EN+ES** (bilingüe) y PT.
+- Idiomas: **ES**, **EN**, **ES+EN** (bilingüe: español primero, inglés debajo) y PT.
 - **↻ Preguntar de nuevo a la IA**: cada intento es una llamada nueva a la **IA real** (Ollama Cloud), sin números grabados ni sorteados. La misma pregunta puede recibir otra respuesta; el gemelo siempre repite su número.
 - **Apuesta de la sala**: el público vota antes de revelar el resultado.
 - **⏯ Ensayo** (plan B): respuestas grabadas de la IA. Se activa **solo** si no hay internet al abrir o si la conexión se cae durante la charla. Una pregunta libre muestra el escenario grabado más parecido. El gemelo sigue calculando en vivo.
@@ -79,7 +79,7 @@ The model only changes **4 things**: **demand**, **price**, **supplier delay** a
 
 ### Features
 
-- Languages: **ES**, **EN**, **EN+ES** (bilingual) and PT.
+- Languages: **ES**, **EN**, **ES+EN** (bilingual: Spanish first, English below) and PT.
 - **↻ Ask the AI again**: every try is a new call to the **real AI** (Ollama Cloud), with no recorded or random numbers. The same question may get a different answer; the twin always repeats its number.
 - **Room's guess**: the audience votes before the reveal.
 - **⏯ Rehearsal** (plan B): recorded AI answers. It switches on **by itself** when there is no internet at start-up or the connection drops during the talk. A free question shows the closest recorded scenario. The twin still calculates live.
@@ -325,7 +325,7 @@ In the talk we call it a "twin" to keep it simple; the idea of rehearsing decisi
 ### Archivos
 
 - `server.py`: servidor local, simulador (el gemelo) y prompts de la IA.
-- `index.html`: toda la interfaz (ES / EN / EN+ES / PT).
+- `index.html`: toda la interfaz (ES / EN / ES+EN / PT).
 - `ensaio_v2.json`: ensayo grabado (10/11/2026, `gpt-oss:120b`), usado por **Ensayo**.
 - `ensaio_2026-11-10.json`: primer ensayo (por transparencia).
 - `INICIAR_DEMO.bat` / `iniciar_demo.sh`: inicio en Windows / Linux-macOS.
@@ -337,7 +337,7 @@ In the talk we call it a "twin" to keep it simple; the idea of rehearsing decisi
 ### Files
 
 - `server.py`: local server, simulator (the twin) and AI prompts.
-- `index.html`: the whole interface (ES / EN / EN+ES / PT).
+- `index.html`: the whole interface (ES / EN / ES+EN / PT).
 - `ensaio_v2.json`: recorded rehearsal (10 Nov 2026, `gpt-oss:120b`), used by **Rehearsal**.
 - `ensaio_2026-11-10.json`: first rehearsal (kept for transparency).
 - `INICIAR_DEMO.bat` / `iniciar_demo.sh`: start on Windows / Linux-macOS.

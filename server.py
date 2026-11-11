@@ -293,8 +293,11 @@ def handle_ask(q, lang):
                         "levers_cut_to_model_limits": twin["adjusted"]})
     langs = ["en", "es"] if lang == "bi" else [lang]
     with ThreadPoolExecutor(2) as ex:
-        res = list(ex.map(lambda l: llm(EXPLAIN_SYS.replace("LANGUAGE", LANG.get(l, "English")), facts,
-                                        want_json=False), langs))
+        # the question may be in another language: state the output language explicitly at the end
+        # la pregunta puede estar en otro idioma: se indica el idioma de salida explícitamente al final
+        res = list(ex.map(lambda l: llm(EXPLAIN_SYS.replace("LANGUAGE", LANG.get(l, "English")) +
+                                        f"\nIMPORTANT: answer ONLY in {LANG.get(l, 'English')}, even if the question is in another language.",
+                                        facts, want_json=False), langs))
     out.update(twin=twin, guess=guess, explanation=res[0][0],
                explanation_es=res[1][0] if lang == "bi" else "",
                models=[m1, m2] + [r[1] for r in res], seconds=[s1, s2, max(r[2] for r in res)], **rest)
@@ -324,15 +327,17 @@ def replay(idx, lang, question=None):
     data = json.loads((HERE / "ensaio_v2.json").read_text(encoding="utf-8"))
     if idx is None:
         idx = closest_scenario(question)
-    base = "es" if lang == "es" else "en"
+    # bilingual mode: Spanish is the first language, so its recorded numbers are the main ones
+    # modo bilingüe: el español es la primera lengua, así que sus números grabados son los principales
+    base = "es" if lang in ("es", "bi") else "en"
     r = data["runs"][base][int(idx)]
     out = {"ai": False, "replay": True, "twin": run_twin(r["params"]), "restated": r["restated"],
            "guess": r["guesses"][0], "guesses": r["guesses"], "explanation": r["explanation"],
            "recorded_at": data["run_at"], "scenario_idx": int(idx)}
     if lang == "bi":
-        r_es = data["runs"]["es"][int(idx)]
-        out.update(restated_en=r["restated"], restated_es=r_es["restated"], explanation_es=r_es["explanation"],
-                   guesses_es=r_es["guesses"])
+        r_en = data["runs"]["en"][int(idx)]
+        out.update(restated_es=r["restated"], restated_en=r_en["restated"], explanation_es=r["explanation"],
+                   explanation=r_en["explanation"], guesses_en=r_en["guesses"])
     return out
 
 
