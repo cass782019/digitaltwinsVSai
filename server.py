@@ -45,6 +45,12 @@ PORT = int(os.environ.get("DEMO_PORT", "8765"))
 MODELS = [os.environ.get("DEMO_MODEL", "gpt-oss:120b"), os.environ.get("DEMO_FALLBACK_MODEL", "glm-5.3-flash")]
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "https://ollama.com/api/chat")
 AI_TIMEOUT = float(os.environ.get("DEMO_AI_TIMEOUT", "20"))   # seconds per AI call before falling back to the rehearsal
+# EN: temperature of the quick AI guess. ~1.0 = an ordinary chat app; each try is a fresh conversation (new random seed).
+# ES: temperatura de la respuesta rápida de la IA. ~1,0 = un chat común; cada intento es una conversación nueva (semilla nueva).
+# Measured 11/11/2026 (gpt-oss:120b, 6 tries per scenario): 1.3 gave the most variety with all answers valid;
+# 1.6 started returning broken answers. / Medido el 11/11/2026: 1,3 dio más variedad con todas las respuestas válidas;
+# con 1,6 empezaron a salir respuestas rotas.
+GUESS_TEMPERATURE = float(os.environ.get("DEMO_GUESS_TEMPERATURE", "1.3"))
 WEEKS = 8
 
 # ---------------------------------------------------------------- the twin
@@ -160,8 +166,8 @@ def api_key():
     return k or None
 
 
-def llm(system, user, want_json=True, temperature=0.2):
-    """temperature=None -> model default (like an ordinary chat app)."""
+def llm(system, user, want_json=True, temperature=0.2, seed=None):
+    """temperature=None -> model default (like an ordinary chat app). seed=None -> no fixed seed."""
     key = api_key()
     if not key:
         raise RuntimeError("OLLAMA_API_KEY not found")
@@ -170,8 +176,13 @@ def llm(system, user, want_json=True, temperature=0.2):
         body = {"model": model, "stream": False,
                 "messages": [{"role": "system", "content": system},
                              {"role": "user", "content": user}]}
+        opts = {}
         if temperature is not None:
-            body["options"] = {"temperature": temperature}
+            opts["temperature"] = temperature
+        if seed is not None:
+            opts["seed"] = seed
+        if opts:
+            body["options"] = opts
         if want_json:
             body["format"] = "json"
         req = urllib.request.Request(OLLAMA_URL,
@@ -255,8 +266,12 @@ def _guess_sys(lang):
 
 
 def handle_guess(q, lang):
-    # the quick guess runs at the model's default temperature, like an ordinary chat app
-    guess, m, s = llm(_guess_sys(lang), q, temperature=None)
+    # EN: real AI, no calculator; every call is a fresh conversation (new seed), like asking a chat app again.
+    #     We do NOT force a different number: if the AI repeats itself, the screen shows it.
+    # ES: IA real, sin calculadora; cada llamada es una conversación nueva (semilla nueva), como volver a preguntar en un chat.
+    #     NO forzamos otro número: si la IA se repite, la pantalla lo muestra.
+    import random
+    guess, m, s = llm(_guess_sys(lang), q, temperature=GUESS_TEMPERATURE, seed=random.randint(1, 2**31 - 1))
     return {"guess": guess, "model": m, "seconds": s}
 
 

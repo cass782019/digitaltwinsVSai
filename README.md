@@ -69,7 +69,7 @@ The model only changes **4 things**: **demand**, **price**, **supplier delay** a
 ### Funciones
 
 - Idiomas: **ES**, **EN**, **EN+ES** (bilingüe) y PT.
-- **↻ Preguntar de nuevo a la IA**: la misma pregunta puede recibir otra respuesta. El gemelo siempre repite su número.
+- **↻ Preguntar de nuevo a la IA**: cada intento es una llamada nueva a la **IA real** (Ollama Cloud), sin números grabados ni sorteados. La misma pregunta puede recibir otra respuesta; el gemelo siempre repite su número.
 - **Apuesta de la sala**: el público vota antes de revelar el resultado.
 - **⏯ Ensayo** (plan B): respuestas grabadas de la IA. Se activa **solo** si no hay internet al abrir o si la conexión se cae durante la charla. Una pregunta libre muestra el escenario grabado más parecido. El gemelo sigue calculando en vivo.
 - Indicadores: ingresos, margen bruto, demanda atendida (unidades) y ventas perdidas (US$).
@@ -80,7 +80,7 @@ The model only changes **4 things**: **demand**, **price**, **supplier delay** a
 ### Features
 
 - Languages: **ES**, **EN**, **EN+ES** (bilingual) and PT.
-- **↻ Ask the AI again**: the same question may get a different answer. The twin always repeats its number.
+- **↻ Ask the AI again**: every try is a new call to the **real AI** (Ollama Cloud), with no recorded or random numbers. The same question may get a different answer; the twin always repeats its number.
 - **Room's guess**: the audience votes before the reveal.
 - **⏯ Rehearsal** (plan B): recorded AI answers. It switches on **by itself** when there is no internet at start-up or the connection drops during the talk. A free question shows the closest recorded scenario. The twin still calculates live.
 - KPIs: revenue, gross margin, demand fulfilled (units) and lost sales (US$).
@@ -434,5 +434,6 @@ EN: without git, use **Code → Download ZIP** on GitHub, unzip and double-click
 | `DEMO_PORT` | `8765` | Puerto local | Local port |
 | `DEMO_NO_BROWSER` | — | `1` = no abrir el navegador | `1` = do not open the browser |
 | `DEMO_AI_TIMEOUT` | `20` | Segundos de espera de la IA antes de pasar al Ensayo | Seconds to wait for the AI before falling back to Rehearsal |
+| `DEMO_GUESS_TEMPERATURE` | `1.3` | Variación de la respuesta rápida de la IA (más alta = más variada; arriba de ~1,5 empieza a fallar) | Variety of the AI's quick guess (higher = more varied; above ~1.5 it starts to break) |
 
 ES: para Ollama local use `OLLAMA_URL=http://localhost:11434/api/chat`. · EN: for a local Ollama use `OLLAMA_URL=http://localhost:11434/api/chat`.

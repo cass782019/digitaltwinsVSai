@@ -220,7 +220,12 @@ function setReplay(on,auto){
 }
 $("offline").onclick=()=>setReplay(!replayMode,false);
 // EN: at start-up, if the AI is unreachable, switch Plan B on by itself. ES: al iniciar, si la IA no responde, activa el plan B solo.
-fetch("/api/health").then(r=>r.json()).then(h=>{ if(!h.ai_online) setReplay(true,true); }).catch(()=>setReplay(true,true));
+// EN: only switch to Plan B when the server says the AI is really unavailable (older servers do not report ai_online: then trust has_key)
+// ES: solo pasa al plan B si el servidor dice que la IA no está disponible (servidores antiguos no informan ai_online: se usa has_key)
+fetch("/api/health").then(r=>r.json()).then(h=>{
+  const online = (h.ai_online === undefined) ? !!h.has_key : !!h.ai_online;
+  if(!online) setReplay(true,true);
+}).catch(()=>setReplay(true,true));
 $("q").addEventListener("input",()=>{presetIdx=null;document.querySelectorAll(".chip").forEach(c=>c.classList.remove("sel"));});
 
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
