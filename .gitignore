@@ -1,0 +1,14 @@
+# EN: secrets - never commit / ES: secretos - nunca subir
+.env
+.env.*
+!.env.example
+
+# EN: Python cache / ES: caché de Python
+__pycache__/
+*.pyc
+
+# EN: local test output and old rehearsal drafts / ES: salidas de prueba locales y borradores de ensayo antiguos
+_shots/
+*.log
+teste_demo_log.json
+ensaio_v2_temp02.json

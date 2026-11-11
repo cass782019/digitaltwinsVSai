@@ -1,0 +1,273 @@
+{
+ "run_at": "2026-11-10T21:00",
+ "runs": {
+  "en": [
+   {
+    "q": "What if a heat wave increases ice cream demand by 80% from week 2?",
+    "params": {
+     "product": "ice_cream",
+     "demand_change_pct": 80.0,
+     "price_change_pct": 0.0,
+     "supplier_delay_weeks": 0,
+     "extra_stock_units": 0,
+     "start_week": 2
+    },
+    "guess": {
+     "revenue_change_pct": 24,
+     "customers_served_pct": 95,
+     "sentence": "The heat wave boosts total 8‑week revenue by roughly 24% while about 95% of customers still find the ice cream on the shelf."
+    },
+    "twin_delta": {
+     "revenue_change_pct": 17.7,
+     "profit_change_pct": 18.0
+    },
+    "twin_scenario": {
+     "revenue": 33440.0,
+     "profit": 16520.0,
+     "customers_served_pct": 95.7,
+     "lost_units": 420,
+     "weeks_with_empty_shelves": 7
+    },
+    "explanation": "The heat wave lifted demand, pushing 8‑week revenue to $33,440, but shelves were empty 7 weeks and 4.3% of shoppers left without ice‑cream. The AI guessed a 24% revenue rise and 95% served, while the twin shows a 17.7% rise and 95.7% served. The manager could test a larger safety‑stock in the twin to cut empty‑shelf weeks.",
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   },
+   {
+    "q": "What if our supplier is 2 weeks late on everything from week 2?",
+    "params": {
+     "product": "all",
+     "demand_change_pct": 0.0,
+     "price_change_pct": 0.0,
+     "supplier_delay_weeks": 2,
+     "extra_stock_units": 0,
+     "start_week": 2
+    },
+    "guess": {
+     "revenue_change_pct": -25,
+     "customers_served_pct": 75,
+     "sentence": "A two‑week stockout in weeks 2‑3 would cut revenue by roughly a quarter and reduce the overall share of customers who find the product on the shelf to about three‑quarters."
+    },
+    "twin_delta": {
+     "revenue_change_pct": -35.0,
+     "profit_change_pct": -35.0
+    },
+    "twin_scenario": {
+     "revenue": 18460.0,
+     "profit": 9100.0,
+     "customers_served_pct": 65.0,
+     "lost_units": 2800,
+     "weeks_with_empty_shelves": 4
+    },
+    "explanation": "The two‑week delay created empty shelves for four weeks, cutting revenue to $18,460, profit to $9,100 and serving only 65% of customers. The AI’s quick guess of a 25% revenue drop and 75% customer service was too optimistic; the twin shows a 35% drop and only 65% served. Next, the manager could test adding a one‑week safety‑stock buffer to see if it eliminates the empty‑shelf weeks.",
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   },
+   {
+    "q": "What if we cut the coffee price by 20%?",
+    "params": {
+     "product": "coffee",
+     "demand_change_pct": 0.0,
+     "price_change_pct": -20.0,
+     "supplier_delay_weeks": 0,
+     "extra_stock_units": 0,
+     "start_week": 2
+    },
+    "guess": {
+     "revenue_change_pct": -4.7,
+     "customers_served_pct": 100,
+     "sentence": "Cutting coffee price by 20% will likely reduce total weekly revenue by roughly 5% while keeping product availability unchanged."
+    },
+    "twin_delta": {
+     "revenue_change_pct": -2.8,
+     "profit_change_pct": -13.0
+    },
+    "twin_scenario": {
+     "revenue": 27593.6,
+     "profit": 12185.6,
+     "customers_served_pct": 100.0,
+     "lost_units": 0,
+     "weeks_with_empty_shelves": 0
+    },
+    "explanation": "Cutting coffee price by 20% lowered weekly revenue to $27,594, a 2.8% drop, while profit fell 13% to $12,186 and all customers were still served. The AI’s quick guess predicted about a 5% revenue loss, which was a bit larger than the twin’s actual 2.8% decline. The manager could test a smaller price cut, say 10%, in the twin to see if revenue holds while profit improves.",
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   },
+   {
+    "q": "Heat wave: ice cream +80%, but we keep 300 extra ice creams on the shelf.",
+    "params": {
+     "product": "ice_cream",
+     "demand_change_pct": 80.0,
+     "price_change_pct": 0.0,
+     "supplier_delay_weeks": 0,
+     "extra_stock_units": 300,
+     "start_week": 2
+    },
+    "guess": {
+     "revenue_change_pct": 27.0,
+     "customers_served_pct": 100,
+     "sentence": "The heat wave lifts weekly revenue by roughly 27% and the extra stock keeps product availability at 100%."
+    },
+    "twin_delta": {
+     "revenue_change_pct": 23.7,
+     "profit_change_pct": 24.0
+    },
+    "twin_scenario": {
+     "revenue": 35120.0,
+     "profit": 17360.0,
+     "customers_served_pct": 100.0,
+     "lost_units": 0,
+     "weeks_with_empty_shelves": 0
+    },
+    "explanation": "A heat wave boosted ice‑cream demand by 80% and we added 300 extra units, keeping shelves full. The AI guessed a 27% revenue rise, while the twin model showed a 23.7% increase. Next, the manager could test the twin with the 300 extra ice creams but without the 80% demand boost to isolate the stock impact.",
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   }
+  ],
+  "es": [
+   {
+    "q": "¿Y si una ola de calor aumenta la demanda de helado un 80% desde la semana 2?",
+    "params": {
+     "product": "ice_cream",
+     "demand_change_pct": 80.0,
+     "price_change_pct": 0.0,
+     "supplier_delay_weeks": 0,
+     "extra_stock_units": 0,
+     "start_week": 2
+    },
+    "guess": {
+     "revenue_change_pct": 24,
+     "customers_served_pct": 92,
+     "sentence": "El aumento de la demanda de helado eleva los ingresos en aproximadamente un 24 % y se espera que el 92 % de los clientes encuentren el producto disponible."
+    },
+    "twin_delta": {
+     "revenue_change_pct": 17.7,
+     "profit_change_pct": 18.0
+    },
+    "twin_scenario": {
+     "revenue": 33440.0,
+     "profit": 16520.0,
+     "customers_served_pct": 95.7,
+     "lost_units": 420,
+     "weeks_with_empty_shelves": 7
+    },
+    "explanation": "La ola de calor elevó la demanda 80 %, los ingresos a $33,440 y la ganancia a $16,520, pero hubo 7 semanas sin stock, 420 unidades perdidas y solo el 95.7 % de los clientes fue atendido.  \nEl AI rápido dijo +24 % de ingresos y 92 % de disponibilidad; el twin mostró +17.7 % y 95.7 %.  \nEl gerente puede probar más inventario de seguridad en la siguiente simulación.",
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   },
+   {
+    "q": "¿Y si nuestro proveedor se retrasa 2 semanas en todo desde la semana 2?",
+    "params": {
+     "product": "all",
+     "demand_change_pct": 0.0,
+     "price_change_pct": 0.0,
+     "supplier_delay_weeks": 2,
+     "extra_stock_units": 0,
+     "start_week": 2
+    },
+    "guess": {
+     "revenue_change_pct": -12.5,
+     "customers_served_pct": 87.5,
+     "sentence": "El retraso del proveedor reducirá los ingresos en aproximadamente un 12,5 % y el 87,5 % de los clientes podrán encontrar el producto en el estante."
+    },
+    "twin_delta": {
+     "revenue_change_pct": -35.0,
+     "profit_change_pct": -35.0
+    },
+    "twin_scenario": {
+     "revenue": 18460.0,
+     "profit": 9100.0,
+     "customers_served_pct": 65.0,
+     "lost_units": 2800,
+     "weeks_with_empty_shelves": 4
+    },
+    "explanation": "El retraso de 2 semanas del proveedor redujo los ingresos a $18 460 (‑35 %), la utilidad a $9 100 (‑35 %) y solo el 65 % de los clientes encontró el producto, con 4 semanas sin stock. El AI rápido estimó –12,5 % y 87,5 % de clientes, pero el twin indica –35 % y solo 65 %. Probar aumentar el inventario de seguridad un 20 %.",
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   },
+   {
+    "q": "¿Y si bajamos el precio del café un 20%?",
+    "params": {
+     "product": "coffee",
+     "demand_change_pct": 0.0,
+     "price_change_pct": -20.0,
+     "supplier_delay_weeks": 0,
+     "extra_stock_units": 0,
+     "start_week": 2
+    },
+    "guess": {
+     "revenue_change_pct": 2,
+     "customers_served_pct": 100,
+     "sentence": "Reducir el precio del café en un 20 % aumentará los ingresos totales aproximadamente un 2 % y mantendrá al 100 % de los clientes satisfechos con la disponibilidad del producto."
+    },
+    "twin_delta": {
+     "revenue_change_pct": -2.8,
+     "profit_change_pct": -13.0
+    },
+    "twin_scenario": {
+     "revenue": 27593.6,
+     "profit": 12185.6,
+     "customers_served_pct": 100.0,
+     "lost_units": 0,
+     "weeks_with_empty_shelves": 0
+    },
+    "explanation": "Al bajar el precio del café 20 % la tienda mantuvo al 100 % de clientes, pero los ingresos cayeron a $27 593,6 y la utilidad a $12 185,6. El pronóstico rápido preveía +2 % en ingresos; el gemelo mostró -2,8 % y -13 % en utilidad. Probar una rebaja del 10 % en el gemelo para buscar mejor margen.",
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   },
+   {
+    "q": "Ola de calor: helado +80%, pero mantenemos 300 helados extra en el estante.",
+    "params": {
+     "product": "ice_cream",
+     "demand_change_pct": 80.0,
+     "price_change_pct": 0.0,
+     "supplier_delay_weeks": 0,
+     "extra_stock_units": 300,
+     "start_week": 2
+    },
+    "guess": {
+     "revenue_change_pct": 27,
+     "customers_served_pct": 100,
+     "sentence": "Con el aumento del 80 % en la demanda de helados y el stock extra, los ingresos suben aproximadamente un 27 % y todos los clientes encuentran el producto."
+    },
+    "twin_delta": {
+     "revenue_change_pct": 23.7,
+     "profit_change_pct": 24.0
+    },
+    "twin_scenario": {
+     "revenue": 35120.0,
+     "profit": 17360.0,
+     "customers_served_pct": 100.0,
+     "lost_units": 0,
+     "weeks_with_empty_shelves": 0
+    },
+    "explanation": "Con la ola de calor la demanda de helados subió un 80 % y, al añadir 300 unidades extra, atendimos al 100 % de los clientes, elevando los ingresos a $35,120. El cálculo rápido estimó un aumento del 27 % en ingresos, mientras que el modelo gemelo mostró un 23.7 %. El gerente podría probar reducir el stock extra a 150 unidades para ver el efecto en ventas.",
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,387 @@
+{
+ "run_at": "2026-11-10T21:42",
+ "model": "gpt-oss:120b (Ollama Cloud)",
+ "guess_temperature": "model default",
+ "runs": {
+  "en": [
+   {
+    "q": "What if our supplier is 2 weeks late on everything from week 2?",
+    "params": {
+     "product": "all",
+     "start_week": 2,
+     "demand_change_pct": 0.0,
+     "price_change_pct": 0.0,
+     "supplier_delay_weeks": 2,
+     "extra_stock_units": 0
+    },
+    "restated": "What if our supplier is 2 weeks late on everything from week 2?",
+    "guesses": [
+     {
+      "revenue_change_pct": -25,
+      "demand_fulfilled_pct": 75,
+      "sentence": "With a two‑week stockout starting in week 2, the eight‑week revenue falls about 25 % to roughly three‑quarters of the normal level, and the store fulfills about 75 % of its total demand."
+     },
+     {
+      "revenue_change_pct": -25,
+      "demand_fulfilled_pct": 75,
+      "sentence": "The two‑week delay cuts revenue by about 25 % and the store fulfills roughly 75 % of the demand."
+     },
+     {
+      "revenue_change_pct": -37.5,
+      "demand_fulfilled_pct": 62.5,
+      "sentence": "The two‑week supply delay cuts the 8‑week revenue by about 38% and leaves the store fulfilling only roughly 63% of its usual demand."
+     }
+    ],
+    "explanation": "The two‑week supplier delay cut eight‑week revenue to US$18,460 (‑35%) and fulfilled only 65% of demand, leaving shelves empty for four weeks and losing 2,800 units. The AI guessed a 25% revenue loss and 75% fulfillment; the twin shows a 35% loss and 65% fulfillment. The manager could test a two‑week safety‑stock buffer in the twin.",
+    "twin_delta": {
+     "revenue_change_pct": -35.0,
+     "gross_margin_change_pct": -35.0
+    },
+    "twin_scenario": {
+     "revenue": 18460.0,
+     "gross_margin": 9100.0,
+     "demand_fulfilled_pct": 65.0,
+     "lost_units": 2800,
+     "weeks_with_empty_shelves": 4,
+     "lost_sales_usd": 9940.0
+    },
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   },
+   {
+    "q": "What if a heat wave increases ice cream demand by 80% from week 2?",
+    "params": {
+     "product": "ice_cream",
+     "start_week": 2,
+     "demand_change_pct": 80.0,
+     "price_change_pct": 0.0,
+     "supplier_delay_weeks": 0,
+     "extra_stock_units": 0
+    },
+    "restated": "What if a heat wave increases ice cream demand by 80% from week 2?",
+    "guesses": [
+     {
+      "revenue_change_pct": 24,
+      "demand_fulfilled_pct": 100,
+      "sentence": "The 8‑week revenue jumps about 24% while the store still meets all demand."
+     },
+     {
+      "revenue_change_pct": 23.7,
+      "demand_fulfilled_pct": 100,
+      "sentence": "The heat wave lifts the 8‑week revenue by about 24% and the store meets all of the increased demand."
+     },
+     {
+      "revenue_change_pct": 18.3,
+      "demand_fulfilled_pct": 91,
+      "sentence": "The heat wave would lift 8‑week revenue by roughly 18 % while the store would satisfy about 91 % of the boosted ice‑cream demand."
+     }
+    ],
+    "explanation": "The 8‑week heat wave lifted revenue to US$33,440 and gross margin to US$16,520, but demand fulfillment fell to 95.7%, shelves were empty 7 weeks and 420 units (US$1,680) were lost. The AI predicted a 24% revenue rise and full demand, while the twin shows a 17.7% rise and 95.7% fulfillment. The manager could test a higher safety‑stock level in the twin to cut empty‑shelf weeks.",
+    "twin_delta": {
+     "revenue_change_pct": 17.7,
+     "gross_margin_change_pct": 18.0
+    },
+    "twin_scenario": {
+     "revenue": 33440.0,
+     "gross_margin": 16520.0,
+     "demand_fulfilled_pct": 95.7,
+     "lost_units": 420,
+     "weeks_with_empty_shelves": 7,
+     "lost_sales_usd": 1680.0
+    },
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   },
+   {
+    "q": "Heat wave: ice cream +80%, but we keep 300 extra ice creams on the shelf.",
+    "params": {
+     "product": "ice_cream",
+     "start_week": 2,
+     "demand_change_pct": 80.0,
+     "price_change_pct": 0.0,
+     "supplier_delay_weeks": 0,
+     "extra_stock_units": 300
+    },
+    "restated": "Heat wave: ice cream +80%, but we keep 300 extra ice creams on the shelf.",
+    "guesses": [
+     {
+      "revenue_change_pct": 27.0,
+      "demand_fulfilled_pct": 100,
+      "sentence": "The heat wave lifts 8‑week revenue by roughly 27% and the store meets all of its demand."
+     },
+     {
+      "revenue_change_pct": 3.5,
+      "demand_fulfilled_pct": 83.7,
+      "sentence": "The heat wave lifts total revenue by roughly 3.5% but the store only satisfies about 84% of the heightened demand."
+     },
+     {
+      "revenue_change_pct": 27,
+      "demand_fulfilled_pct": 100,
+      "sentence": "The heat wave boosts 8‑week revenue by roughly 27% while the extra stock lets the store meet all the higher ice‑cream demand."
+     }
+    ],
+    "explanation": "The heat wave boosted 8‑week revenue to US$35,120 and gross margin to US$17,360, with all demand met. The AI predicted a 27% revenue rise, while the twin calculated a 23.7% increase, a modest over‑estimate. The manager could test reducing the extra stock to 200 units in the twin to see if margin improves.",
+    "twin_delta": {
+     "revenue_change_pct": 23.7,
+     "gross_margin_change_pct": 24.0
+    },
+    "twin_scenario": {
+     "revenue": 35120.0,
+     "gross_margin": 17360.0,
+     "demand_fulfilled_pct": 100.0,
+     "lost_units": 0,
+     "weeks_with_empty_shelves": 0,
+     "lost_sales_usd": 0.0
+    },
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   },
+   {
+    "q": "What if we cut the coffee price by 20%?",
+    "params": {
+     "product": "coffee",
+     "start_week": 2,
+     "demand_change_pct": 0.0,
+     "price_change_pct": -20.0,
+     "supplier_delay_weeks": 0,
+     "extra_stock_units": 0
+    },
+    "restated": "What if we cut the coffee price by 20%?",
+    "guesses": [
+     {
+      "revenue_change_pct": -3.6,
+      "demand_fulfilled_pct": 98,
+      "sentence": "Cutting coffee price by 20% would lower total 8‑week revenue by about 3.6 % while the store would meet roughly 98 % of the higher coffee demand."
+     },
+     {
+      "revenue_change_pct": -5,
+      "demand_fulfilled_pct": 100,
+      "sentence": "Cutting coffee price by 20 % likely trims total 8‑week revenue by about 5 % while the store can still meet all demand."
+     },
+     {
+      "revenue_change_pct": -5.4,
+      "demand_fulfilled_pct": 100,
+      "sentence": "Cutting coffee price by 20% likely drops 8‑week revenue by about 5 % while still satisfying all demand."
+     }
+    ],
+    "explanation": "The store’s 8‑week revenue fell to US$27,594 and gross margin to US$12,186, while it still sold all of the coffee demand. The AI had predicted a 3.6% revenue drop and only 98% demand fulfillment, but the twin showed a smaller 2.8% revenue decline and 100% demand met. The manager could test a smaller price cut, say 10%, in the twin to see if revenue improves without hurting margin.",
+    "twin_delta": {
+     "revenue_change_pct": -2.8,
+     "gross_margin_change_pct": -13.0
+    },
+    "twin_scenario": {
+     "revenue": 27593.6,
+     "gross_margin": 12185.6,
+     "demand_fulfilled_pct": 100.0,
+     "lost_units": 0,
+     "weeks_with_empty_shelves": 0,
+     "lost_sales_usd": 0.0
+    },
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   }
+  ],
+  "es": [
+   {
+    "q": "¿Y si nuestro proveedor se retrasa 2 semanas en todo desde la semana 2?",
+    "params": {
+     "product": "all",
+     "start_week": 2,
+     "demand_change_pct": 0.0,
+     "price_change_pct": 0.0,
+     "supplier_delay_weeks": 2,
+     "extra_stock_units": 0
+    },
+    "restated": "Nuestro proveedor se retrasa 2 semanas en todo desde la semana 2.",
+    "guesses": [
+     {
+      "revenue_change_pct": -25,
+      "demand_fulfilled_pct": 75,
+      "sentence": "Con el retraso, la facturación cae alrededor de un 25 % y sólo se cubre el 75 % de la demanda."
+     },
+     {
+      "revenue_change_pct": -25,
+      "demand_fulfilled_pct": 75,
+      "sentence": "Con dos semanas sin reposición a partir de la segunda, la tienda pierde aproximadamente un 25 % de sus ingresos y solo cubre el 75 % de la demanda."
+     },
+     {
+      "revenue_change_pct": -25,
+      "demand_fulfilled_pct": 75,
+      "sentence": "Con el retraso de dos semanas, la tienda solo cubrirá el 75 % de la demanda y sus ingresos caerán alrededor del 25 %."
+     }
+    ],
+    "explanation": "El retraso de 2 semanas del proveedor redujo los ingresos a US$18 460, cubrió solo el 65 % de la demanda y dejó 4 semanas con estantes vacíos, perdiendo US$9 940 en ventas. La IA estimó una caída del 25 % y cobertura del 75 %, pero el gemelo indica una caída del 35 % y cobertura del 65 %. El gerente podría probar en el gemelo un inventario de seguridad del 20 % para evitar estantes vacíos.",
+    "twin_delta": {
+     "revenue_change_pct": -35.0,
+     "gross_margin_change_pct": -35.0
+    },
+    "twin_scenario": {
+     "revenue": 18460.0,
+     "gross_margin": 9100.0,
+     "demand_fulfilled_pct": 65.0,
+     "lost_units": 2800,
+     "weeks_with_empty_shelves": 4,
+     "lost_sales_usd": 9940.0
+    },
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   },
+   {
+    "q": "¿Y si una ola de calor aumenta la demanda de helado un 80% desde la semana 2?",
+    "params": {
+     "product": "ice_cream",
+     "start_week": 2,
+     "demand_change_pct": 80.0,
+     "price_change_pct": 0.0,
+     "supplier_delay_weeks": 0,
+     "extra_stock_units": 0
+    },
+    "restated": "Una ola de calor aumenta la demanda de helado un 80% desde la semana 2.",
+    "guesses": [
+     {
+      "revenue_change_pct": 0,
+      "demand_fulfilled_pct": 82.6,
+      "sentence": "Con la ola de calor la demanda total sube un 21 % pero el negocio solo cubre aproximadamente el 83 % de la demanda, por lo que los ingresos se mantienen sin cambios."
+     },
+     {
+      "revenue_change_pct": 23.7,
+      "demand_fulfilled_pct": 100,
+      "sentence": "La ola de calor impulsa los ingresos en aproximadamente un 24 % y la tienda satisface el 100 % de la demanda."
+     },
+     {
+      "revenue_change_pct": 17.0,
+      "demand_fulfilled_pct": 95.0,
+      "sentence": "Con la ola de calor la tienda incrementa sus ingresos alrededor de un 17 % y cubre aproximadamente el 95 % de la demanda."
+     }
+    ],
+    "explanation": "Con la ola de calor, el ingreso en 8 semanas fue US$33,440, cubriendo el 95.7 % de la demanda, con 420 unidades perdidas y 7 semanas sin stock. La IA rápida estimó ingresos cambio y 82.6 % de demanda cubierta; el gemelo mostró +17.7 % en ingresos y cobertura del 95.7 %. El gerente podría probar mantener inventario suficiente para cubrir el 100 % en la semana 2 y bajar las 7 semanas sin stock.",
+    "twin_delta": {
+     "revenue_change_pct": 17.7,
+     "gross_margin_change_pct": 18.0
+    },
+    "twin_scenario": {
+     "revenue": 33440.0,
+     "gross_margin": 16520.0,
+     "demand_fulfilled_pct": 95.7,
+     "lost_units": 420,
+     "weeks_with_empty_shelves": 7,
+     "lost_sales_usd": 1680.0
+    },
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   },
+   {
+    "q": "Ola de calor: helado +80%, pero mantenemos 300 helados extra en el estante.",
+    "params": {
+     "product": "ice_cream",
+     "start_week": 2,
+     "demand_change_pct": 80.0,
+     "price_change_pct": 0.0,
+     "supplier_delay_weeks": 0,
+     "extra_stock_units": 300
+    },
+    "restated": "Ola de calor aumenta la demanda de helado en 80% y se añaden 300 helados extra al estante.",
+    "guesses": [
+     {
+      "revenue_change_pct": 27.0,
+      "demand_fulfilled_pct": 100,
+      "sentence": "Con el aumento del 80 % en la demanda de helados y el stock extra, los ingresos suben aproximadamente un 27 % y se satisface el 100 % de la demanda."
+     },
+     {
+      "revenue_change_pct": 27,
+      "demand_fulfilled_pct": 100,
+      "sentence": "Con el aumento del 80 % en la demanda de helados y 300 unidades extra en stock, los ingresos del período de 8 semanas suben aproximadamente un 27 % y se cubre el 100 % de la demanda."
+     },
+     {
+      "revenue_change_pct": 27,
+      "demand_fulfilled_pct": 100,
+      "sentence": "Con el aumento del 80 % en la demanda de helados y manteniendo suficiente stock, los ingresos totales subirán aproximadamente un 27 % y se cubrirá el 100 % de la demanda."
+     }
+    ],
+    "explanation": "La demanda de helados subió 80% y mantuvimos 300 unidades extra, logrando ingresos totales de US$35,120 y cubriendo el 100% de la demanda en 8 semanas. La IA pronosticó un aumento del 27% en ingresos, pero el gemelo calcula un incremento real del 23.7%. Probar reducir el stock extra a 200 unidades para observar el impacto en el margen.",
+    "twin_delta": {
+     "revenue_change_pct": 23.7,
+     "gross_margin_change_pct": 24.0
+    },
+    "twin_scenario": {
+     "revenue": 35120.0,
+     "gross_margin": 17360.0,
+     "demand_fulfilled_pct": 100.0,
+     "lost_units": 0,
+     "weeks_with_empty_shelves": 0,
+     "lost_sales_usd": 0.0
+    },
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   },
+   {
+    "q": "¿Y si bajamos el precio del café un 20%?",
+    "params": {
+     "product": "coffee",
+     "start_week": 2,
+     "demand_change_pct": 0.0,
+     "price_change_pct": -20.0,
+     "supplier_delay_weeks": 0,
+     "extra_stock_units": 0
+    },
+    "restated": "Bajamos el precio del café un 20%.",
+    "guesses": [
+     {
+      "revenue_change_pct": 0.9,
+      "demand_fulfilled_pct": 100,
+      "sentence": "Al bajar el precio del café un 20 %, la tienda genera aproximadamente un 1 % más de ingresos y logra cubrir el 100 % de la demanda."
+     },
+     {
+      "revenue_change_pct": -3.6,
+      "demand_fulfilled_pct": 100,
+      "sentence": "Al bajar el precio del café un 20% esperamos que la receta total de 8 semanas caiga alrededor de un 3‑4 % mientras se cubre el 100 % de la demanda."
+     },
+     {
+      "revenue_change_pct": 2.0,
+      "demand_fulfilled_pct": 100,
+      "sentence": "Al bajar el precio del café un 20 %, la facturación total sube aproximadamente un 2 % y se sigue vendiendo el 100 % de la demanda."
+     }
+    ],
+    "explanation": "Al bajar el precio del café 20 %, la tienda cubrió el 100 % de la demanda, pero en 8 semanas los ingresos fueron US$27 594 (‑2.8 %) y el margen US$12 186 (‑13.0 %). La IA estimó +0.9 % en ingresos; el gemelo indica –2.8 %. El gerente podría probar una rebaja del 10 % en el gemelo.",
+    "twin_delta": {
+     "revenue_change_pct": -2.8,
+     "gross_margin_change_pct": -13.0
+    },
+    "twin_scenario": {
+     "revenue": 27593.6,
+     "gross_margin": 12185.6,
+     "demand_fulfilled_pct": 100.0,
+     "lost_units": 0,
+     "weeks_with_empty_shelves": 0,
+     "lost_sales_usd": 0.0
+    },
+    "models": [
+     "gpt-oss:120b",
+     "gpt-oss:120b",
+     "gpt-oss:120b"
+    ]
+   }
+  ]
+ }
+}
