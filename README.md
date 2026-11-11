@@ -91,26 +91,32 @@ The model only changes **4 things**: **demand**, **price**, **supplier delay** a
 
 ### Cómo ejecutarla
 
-Requisitos: **Python 3.9+** (solo biblioteca estándar, nada que instalar) y una clave de **Ollama Cloud**.
+Es **autocontenida**: solo necesita **Python 3.9+**, sin instalar paquetes, en **Windows, Linux o macOS**. La IA en vivo necesita internet y una clave de **Ollama Cloud**.
 
-Copie `.env.example` como `.env`, complete `OLLAMA_API_KEY` y ejecute `python server.py`. En Windows: doble clic en `INICIAR_DEMO.bat`. Se abre en http://127.0.0.1:8765.
+- **Windows:** doble clic en `INICIAR_DEMO.bat`.
+- **Linux / macOS:** `./iniciar_demo.sh`.
 
-Sin clave la página igual abre: use **⏯ Ensayo** con los 4 escenarios predefinidos.
+La primera vez el script crea el `.env` a partir de `.env.example`. Ponga su clave en `OLLAMA_API_KEY` y abra http://127.0.0.1:8765.
 
-Comandos y configuración: ver [abajo](#inicio-rápido--quick-start).
+Sin clave o sin internet, la página igual abre: use **⏯ Ensayo** con los 4 escenarios predefinidos.
+
+Comandos paso a paso: ver [abajo](#quick-start).
 
 </td>
 <td valign="top">
 
 ### Run it
 
-Requirements: **Python 3.9+** (standard library only, nothing to install) and an **Ollama Cloud** key.
+It is **self-contained**: it only needs **Python 3.9+**, with no packages to install, on **Windows, Linux or macOS**. The live AI needs internet and an **Ollama Cloud** key.
 
-Copy `.env.example` to `.env`, set `OLLAMA_API_KEY` and run `python server.py`. On Windows: double-click `INICIAR_DEMO.bat`. It opens at http://127.0.0.1:8765.
+- **Windows:** double-click `INICIAR_DEMO.bat`.
+- **Linux / macOS:** `./iniciar_demo.sh`.
 
-Without a key the page still opens: use **⏯ Rehearsal** with the 4 preset scenarios.
+On first run the script creates `.env` from `.env.example`. Put your key in `OLLAMA_API_KEY` and open http://127.0.0.1:8765.
 
-Commands and configuration: see [below](#inicio-rápido--quick-start).
+Without a key or internet the page still opens: use **⏯ Rehearsal** with the 4 preset scenarios.
+
+Step-by-step commands: see [below](#quick-start).
 
 </td>
 </tr>
@@ -124,6 +130,7 @@ Commands and configuration: see [below](#inicio-rápido--quick-start).
 - `index.html`: toda la interfaz (ES / EN / EN+ES / PT).
 - `ensaio_v2.json`: ensayo grabado (10/11/2026, `gpt-oss:120b`), usado por **Ensayo**.
 - `ensaio_2026-11-10.json`: primer ensayo (por transparencia).
+- `INICIAR_DEMO.bat` / `iniciar_demo.sh`: inicio en Windows / Linux-macOS.
 - `.env.example`: plantilla de configuración.
 
 </td>
@@ -135,6 +142,7 @@ Commands and configuration: see [below](#inicio-rápido--quick-start).
 - `index.html`: the whole interface (ES / EN / EN+ES / PT).
 - `ensaio_v2.json`: recorded rehearsal (10 Nov 2026, `gpt-oss:120b`), used by **Rehearsal**.
 - `ensaio_2026-11-10.json`: first rehearsal (kept for transparency).
+- `INICIAR_DEMO.bat` / `iniciar_demo.sh`: start on Windows / Linux-macOS.
 - `.env.example`: configuration template.
 
 </td>
@@ -181,16 +189,41 @@ The Unilasalle name and logo are not covered by the license.
 </tr>
 </table>
 
+<a id="quick-start"></a>
+
 ## Inicio rápido · Quick start
 
+### 🐧 Linux / macOS
+
 ```bash
+# ES: si falta Python (Debian/Ubuntu) · EN: if Python is missing (Debian/Ubuntu)
+sudo apt install -y python3 git
+
 git clone https://github.com/cass782019/digitaltwinsVSai.git
 cd digitaltwinsVSai
-cp .env.example .env    # Windows: copy .env.example .env
-# ES: edite .env y complete OLLAMA_API_KEY
-# EN: edit .env and set OLLAMA_API_KEY
-python server.py
+chmod +x iniciar_demo.sh
+./iniciar_demo.sh          # ES: crea .env la 1.ª vez · EN: creates .env on first run
+nano .env                  # ES: complete OLLAMA_API_KEY · EN: set OLLAMA_API_KEY
+./iniciar_demo.sh
 ```
+
+ES: en un servidor sin escritorio (SSH) no se abre el navegador; abra `http://127.0.0.1:8765` en su máquina (por ejemplo con `ssh -L 8765:127.0.0.1:8765 usuario@servidor`).
+EN: on a server without a desktop (SSH) no browser opens; open `http://127.0.0.1:8765` on your machine (e.g. with `ssh -L 8765:127.0.0.1:8765 user@server`).
+
+### 🪟 Windows
+
+```bat
+:: ES: instale Python desde python.org y marque "Add python.exe to PATH"
+:: EN: install Python from python.org and tick "Add python.exe to PATH"
+git clone https://github.com/cass782019/digitaltwinsVSai.git
+cd digitaltwinsVSai
+INICIAR_DEMO.bat
+notepad .env
+INICIAR_DEMO.bat
+```
+
+ES: sin git, use **Code → Download ZIP** en GitHub, descomprima y haga doble clic en `INICIAR_DEMO.bat`.
+EN: without git, use **Code → Download ZIP** on GitHub, unzip and double-click `INICIAR_DEMO.bat`.
 
 ### Configuración · Configuration (`.env`)
 
@@ -201,5 +234,6 @@ python server.py
 | `DEMO_MODEL` | `gpt-oss:120b` | Modelo principal | Main model |
 | `DEMO_FALLBACK_MODEL` | `glm-5.3-flash` | Modelo de respaldo | Fallback model |
 | `DEMO_PORT` | `8765` | Puerto local | Local port |
+| `DEMO_NO_BROWSER` | — | `1` = no abrir el navegador | `1` = do not open the browser |
 
 ES: para Ollama local use `OLLAMA_URL=http://localhost:11434/api/chat`. · EN: for a local Ollama use `OLLAMA_URL=http://localhost:11434/api/chat`.

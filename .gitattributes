@@ -1,0 +1,7 @@
+# EN: keep Linux line endings in shell scripts and Windows ones in .bat
+# ES: mantener fin de línea Linux en scripts de shell y Windows en .bat
+* text=auto
+*.sh  text eol=lf
+*.bat text eol=crlf
+*.png binary
+*.ico binary

@@ -325,8 +325,19 @@ if __name__ == "__main__":
             r = run_twin(p)
             print(p, "->", r["scenario"], r["delta"])
         sys.exit(0)
-    srv = ThreadingHTTPServer(("127.0.0.1", PORT), H)
+    host = os.environ.get("DEMO_HOST", "127.0.0.1")
+    try:
+        srv = ThreadingHTTPServer((host, PORT), H)
+    except OSError as e:
+        print(f"EN: port {PORT} is busy ({e}). Close the other demo window or set DEMO_PORT in .env.")
+        print(f"ES: el puerto {PORT} está ocupado ({e}). Cierre la otra ventana de la demo o defina DEMO_PORT en .env.")
+        sys.exit(1)
     url = f"http://127.0.0.1:{PORT}/"
-    print("Demo running at", url, "| AI key found:", bool(api_key()), "| Ctrl+C to stop")
-    threading.Timer(1.0, lambda: webbrowser.open(url)).start()
-    srv.serve_forever()
+    print("Demo running at / Demo en", url, "| AI key found / clave de IA:", bool(api_key()),
+          "| Ctrl+C to stop / para detener")
+    if os.environ.get("DEMO_NO_BROWSER", "").strip() not in ("1", "true", "yes"):
+        threading.Timer(1.0, lambda: webbrowser.open(url)).start()
+    try:
+        srv.serve_forever()
+    except KeyboardInterrupt:
+        print("\nStopped / Detenida.")
