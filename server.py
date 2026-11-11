@@ -47,9 +47,11 @@ OLLAMA_URL = os.environ.get("OLLAMA_URL", "https://ollama.com/api/chat")
 AI_TIMEOUT = float(os.environ.get("DEMO_AI_TIMEOUT", "20"))   # seconds per AI call before falling back to the rehearsal
 # EN: temperature of the quick AI guess. ~1.0 = an ordinary chat app; each try is a fresh conversation (new random seed).
 # ES: temperatura de la respuesta rápida de la IA. ~1,0 = un chat común; cada intento es una conversación nueva (semilla nueva).
-# Measured 11/11/2026 (gpt-oss:120b, 6 tries per scenario): 1.3 gave the most variety with all answers valid;
-# 1.6 started returning broken answers. / Medido el 11/11/2026: 1,3 dio más variedad con todas las respuestas válidas;
-# con 1,6 empezaron a salir respuestas rotas.
+# Measured 11/11/2026 (gpt-oss:120b, 6 tries x 3 scenarios): distinct answers 10/18 at 1.0, 9/18 at 1.3, 8/18 at 1.6
+# (1 broken answer at 1.6). Temperature changes little: the variety depends mostly on the question (coffee varies a lot,
+# supplier almost never). 1.3 is the highest value with every answer valid. /
+# Medido el 11/11/2026: respuestas distintas 10/18 con 1,0, 9/18 con 1,3, 8/18 con 1,6 (1 respuesta rota con 1,6).
+# La temperatura cambia poco: la variación depende sobre todo de la pregunta. 1,3 es el valor más alto con todas válidas.
 GUESS_TEMPERATURE = float(os.environ.get("DEMO_GUESS_TEMPERATURE", "1.3"))
 WEEKS = 8
 
