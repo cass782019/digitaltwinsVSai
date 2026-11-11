@@ -1,0 +1,27 @@
+flowchart TB
+  UI["Interfaz web · Web UI"]
+  subgraph SRV["server.py"]
+    H["Manejador HTTP · HTTP handler<br/>class H"]
+    ASK["Orquestador · Orchestrator<br/>handle_ask · handle_guess"]
+    RP["Plan B · Rehearsal<br/>replay · closest_scenario"]
+    HL["Salud · Health<br/>ai_online · api_key"]
+    LLM["Cliente de IA · AI client<br/>llm() + prompts<br/>PARSE · GUESS · EXPLAIN"]
+    TWIN["Gemelo · Twin<br/>run_twin · simulate_product"]
+    NORM["Límites · Limits<br/>normalize · LIMITS"]
+  end
+  O["☁️ Ollama Cloud"]
+  REH[("ensaio_v2.json")]
+  UI --> H
+  H --> ASK
+  H --> RP
+  H --> HL
+  ASK --> LLM
+  ASK --> TWIN
+  RP --> TWIN
+  RP --> REH
+  TWIN --> NORM
+  LLM --> O
+  classDef comp fill:#85BBF0,color:#000,stroke:#5D82A8
+  classDef ext fill:#8A8A8A,color:#fff,stroke:#6B6B6B
+  class H,ASK,LLM,TWIN,NORM,RP,HL comp
+  class O ext

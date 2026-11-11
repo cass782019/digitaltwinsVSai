@@ -5,7 +5,7 @@
 <sub>International Business Week · Unilasalle-RS · 11/11/2026 · MIT</sub>
 </p>
 
-![Pantalla de la demo (modo EN+ES) / Demo screen (EN+ES mode)](docs/screenshot_en-es.png)
+<p align="center"><img src="docs/screenshot_en-es.png" alt="Pantalla de la demo (modo EN+ES) / Demo screen (EN+ES mode)" width="720"></p>
 
 **Contenido · Contents:** [Arquitectura C4 · C4 architecture](#c4) · [Cómo se simula el gemelo · How the twin is simulated](#simulacion) · [Un gemelo real · A real twin](#gemelo-real) · [Fuentes · Sources](#fuentes) · [Inicio rápido · Quick start](#quick-start)
 
@@ -148,107 +148,19 @@ The [C4 model](https://c4model.com) describes software at zoom levels: **context
 
 ### Nivel 1: Contexto · Level 1: Context
 
-```mermaid
-flowchart LR
-  P["👤 Presentador y público<br/>Presenter and audience<br/>[Persona · Person]"]
-  D["🖥️ Demo Gemelo vs. IA<br/>Twin vs. AI demo<br/>[Sistema · Software system]<br/>Simula una tienda y la compara con la IA<br/>Simulates a store and compares it with the AI"]
-  O["☁️ Ollama Cloud<br/>[Sistema externo · External system]<br/>Modelos de lenguaje · Language models<br/>gpt-oss:120b · glm-5.3-flash"]
-  P -->|"Pregunta ¿y si…? / Asks what if…?<br/>[navegador · browser]"| D
-  D -->|"Interpretar, adivinar, explicar<br/>Parse, guess, explain<br/>[HTTPS + JSON]"| O
-  classDef person fill:#08427B,color:#fff,stroke:#052E56
-  classDef system fill:#1168BD,color:#fff,stroke:#0B4884
-  classDef ext fill:#8A8A8A,color:#fff,stroke:#6B6B6B
-  class P person
-  class D system
-  class O ext
-```
+<p align="center"><img src="docs/diagrams/c4-1-contexto-context.png" alt="C4 nivel 1: contexto / level 1: context" width="820"></p>
 
 ### Nivel 2: Contenedores · Level 2: Containers
 
-```mermaid
-flowchart LR
-  P["👤 Presentador · Presenter"]
-  subgraph SYS["Demo Gemelo vs. IA · Twin vs. AI demo"]
-    UI["Interfaz web · Web UI<br/>[index.html · HTML + JavaScript]<br/>ES · EN · EN+ES · PT"]
-    API["Servidor local · Local server<br/>[server.py · Python 3.9+, solo stdlib]<br/>127.0.0.1:8765"]
-    REH[("Ensayo grabado<br/>Recorded rehearsal<br/>[ensaio_v2.json]")]
-    ENV[(".env<br/>clave de IA · AI key<br/>(no se sube · not committed)")]
-  end
-  O["☁️ Ollama Cloud<br/>[API HTTPS]"]
-  P -->|"usa · uses"| UI
-  UI -->|"POST /api/ask · /api/guess<br/>/api/replay · /api/twin<br/>GET /api/health"| API
-  API -->|"lee · reads"| REH
-  API -->|"lee · reads"| ENV
-  API -->|"POST /api/chat<br/>espera máx. 20 s · max wait 20 s"| O
-  classDef person fill:#08427B,color:#fff,stroke:#052E56
-  classDef cont fill:#438DD5,color:#fff,stroke:#2E6295
-  classDef ext fill:#8A8A8A,color:#fff,stroke:#6B6B6B
-  class P person
-  class UI,API,REH,ENV cont
-  class O ext
-```
+<p align="center"><img src="docs/diagrams/c4-2-contenedores-containers.png" alt="C4 nivel 2: contenedores / level 2: containers" width="820"></p>
 
 ### Nivel 3: Componentes de `server.py` · Level 3: Components of `server.py`
 
-```mermaid
-flowchart TB
-  UI["Interfaz web · Web UI"]
-  subgraph SRV["server.py"]
-    H["Manejador HTTP · HTTP handler<br/>class H"]
-    ASK["Orquestador · Orchestrator<br/>handle_ask · handle_guess"]
-    LLM["Cliente de IA · AI client<br/>llm() + prompts PARSE / GUESS / EXPLAIN"]
-    TWIN["Gemelo · Twin<br/>run_twin · simulate_product · kpis"]
-    NORM["Límites del modelo · Model limits<br/>normalize · LIMITS"]
-    RP["Plan B · Rehearsal<br/>replay · closest_scenario"]
-    HL["Salud y configuración · Health and config<br/>ai_online · api_key · load_dotenv"]
-  end
-  O["☁️ Ollama Cloud"]
-  REH[("ensaio_v2.json")]
-  UI --> H
-  H -->|"/api/ask · /api/guess"| ASK
-  H -->|"/api/replay"| RP
-  H -->|"/api/twin"| TWIN
-  H -->|"/api/health"| HL
-  ASK --> LLM
-  ASK --> TWIN
-  TWIN --> NORM
-  RP --> REH
-  RP --> TWIN
-  LLM --> O
-  classDef comp fill:#85BBF0,color:#000,stroke:#5D82A8
-  classDef ext fill:#8A8A8A,color:#fff,stroke:#6B6B6B
-  class H,ASK,LLM,TWIN,NORM,RP,HL comp
-  class O ext
-```
+<p align="center"><img src="docs/diagrams/c4-3-componentes-components.png" alt="C4 nivel 3: componentes de server.py / level 3: server.py components" width="620"></p>
 
 ### Vista dinámica: una pregunta · Dynamic view: one question
 
-```mermaid
-sequenceDiagram
-  autonumber
-  actor U as Presentador · Presenter
-  participant B as Navegador · Browser
-  participant S as server.py
-  participant AI as Ollama Cloud
-  participant T as Gemelo · Twin
-  U->>B: ¿Y si…? · What if…?
-  B->>S: POST /api/ask (pregunta, idioma · question, language)
-  S->>AI: PARSE: pregunta → parámetros · question → parameters
-  AI-->>S: product all, supplier_delay_weeks 2
-  S->>AI: GUESS: adivina sin calculadora · guess without a calculator
-  AI-->>S: ingresos −25 % · revenue −25 %
-  S->>T: run_twin(parámetros · parameters)
-  T-->>S: ingresos −35 %, demanda atendida 65 %
-  S->>AI: EXPLAIN: solo con los números del gemelo · only the twin's numbers
-  AI-->>S: 3 frases · 3 sentences
-  S-->>B: IA + gemelo + explicación · AI + twin + explanation
-  B-->>U: Paneles 1 a 4 · Panels 1 to 4
-  opt Sin internet · No internet
-    B->>S: POST /api/replay (pregunta · question)
-    S->>T: run_twin (en vivo · live)
-    S-->>B: respuestas grabadas de la IA + gemelo en vivo · recorded AI answers + live twin
-  end
-```
+<p align="center"><img src="docs/diagrams/c4-dinamica-dynamic.png" alt="Vista dinámica: una pregunta / dynamic view: one question" width="820"></p>
 
 <a id="simulacion"></a>
 
@@ -307,16 +219,7 @@ Changes start in **week 2** (default) and last until week 8. Limits: demand −9
 
 ### El ciclo semanal · The weekly loop
 
-```mermaid
-flowchart LR
-  A["Semana t<br/>Week t"] --> B["Demanda · Demand<br/>normal × cambios<br/>normal × changes"]
-  B --> C["Llega el pedido<br/>Order arrives"]
-  C --> D["Vender lo que hay<br/>Sell what is on the shelf<br/>falta = venta perdida<br/>shortfall = lost sale"]
-  D --> E["Pedir hasta 1,6 semanas<br/>Order up to 1.6 weeks<br/>llega en t + 1 + retraso<br/>arrives at t + 1 + delay"]
-  E --> G{"¿t < 8?"}
-  G -->|"sí · yes"| A
-  G -->|"no"| H["Indicadores de 8 semanas<br/>8-week KPIs"]
-```
+<p align="center"><img src="docs/diagrams/gemelo-ciclo-semanal-twin-weekly-loop.png" alt="Ciclo semanal del gemelo / twin weekly loop" width="820"></p>
 
 ### Ejemplo real del código · Real example from the code
 
@@ -376,58 +279,11 @@ In the talk we call it a "twin" to keep it simple; the idea of rehearsing decisi
 </tr>
 </table>
 
-```mermaid
-flowchart LR
-  M["Modelo digital · Digital model<br/>datos a mano · data by hand<br/>⬅ esta demo · this demo"]
-  S["Sombra digital · Digital shadow<br/>real → modelo, automático<br/>real → model, automatic"]
-  T["Gemelo digital · Digital twin<br/>ida y vuelta automática<br/>automatic, both ways"]
-  M -->|"+ datos en vivo · + live data"| S
-  S -->|"+ acción de vuelta · + action back"| T
-  classDef here fill:#FDB913,color:#003E7B,stroke:#003E7B
-  classDef lvl fill:#438DD5,color:#fff,stroke:#2E6295
-  class M here
-  class S,T lvl
-```
+<p align="center"><img src="docs/diagrams/niveles-modelo-sombra-gemelo-levels.png" alt="Modelo, sombra y gemelo digital / digital model, shadow and twin" width="820"></p>
 
 ### Arquitectura de un gemelo real de tienda · Architecture of a real store twin
 
-```mermaid
-flowchart LR
-  subgraph FIS["🏬 Tienda real · Real store"]
-    POS["Cajas · POS"]
-    ERP["ERP: stock y pedidos<br/>stock and orders"]
-    SUP["Proveedores · Suppliers"]
-    IOT["Sensores · Sensors"]
-    EXT["Clima, promociones<br/>Weather, promotions"]
-  end
-  subgraph DAT["Datos · Data"]
-    ING["Ingesta continua<br/>Continuous ingestion"] --> HIST[("Históricos limpios<br/>Clean history")]
-  end
-  subgraph DT["Gemelo digital · Digital twin"]
-    STATE["Estado actual<br/>Current state"] --> SIM["Simulación de<br/>eventos discretos<br/>Discrete-event<br/>simulation"]
-    FC["Pronóstico (ML)<br/>Forecast (ML)"] --> SIM
-    SIM --> MC["Miles de escenarios<br/>con incertidumbre<br/>Thousands of scenarios<br/>with uncertainty"]
-  end
-  GENAI["🤖 IA generativa<br/>Generative AI<br/>pregunta y explica<br/>asks and explains"]
-  MGR["👤 Gerentes<br/>Managers"]
-  POS & ERP & SUP & IOT & EXT --> ING
-  HIST --> STATE
-  HIST --> FC
-  MC <-->|"números del gemelo<br/>twin's numbers"| GENAI
-  GENAI <-->|"¿y si…?<br/>what if…?"| MGR
-  MGR ==> ACT["🏬 Acción en la tienda real<br/>Action in the real store<br/>pedido, precio, layout<br/>order, price, layout"]
-  ACT -.->|"vuelve como datos nuevos<br/>comes back as new data"| ING
-  HIST -.->|"previsto vs. real: recalibrar<br/>forecast vs. actual: recalibrate"| FC
-  classDef store fill:#FFF4D6,stroke:#FDB913,color:#003E7B
-  classDef data fill:#E8F1FB,stroke:#438DD5,color:#003E7B
-  classDef twin fill:#438DD5,stroke:#2E6295,color:#fff
-  classDef use fill:#003E7B,stroke:#002A55,color:#fff
-  class POS,ERP,SUP,IOT,EXT store
-  class ING,HIST data
-  class STATE,FC,SIM,MC twin
-  class MGR,GENAI use
-  class ACT store
-```
+<p align="center"><img src="docs/diagrams/gemelo-real-tienda-real-store-twin.png" alt="Arquitectura de un gemelo real de tienda / real store twin architecture" width="820"></p>
 
 ### Demo vs. gemelo real · Demo vs. real twin
 

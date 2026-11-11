@@ -1,0 +1,20 @@
+flowchart LR
+  P["👤 Presentador<br/>Presenter"]
+  subgraph SYS["Demo Gemelo vs. IA · Twin vs. AI demo"]
+    UI["Interfaz web<br/>Web UI<br/>index.html<br/>ES · EN · EN+ES · PT"]
+    API["Servidor local<br/>Local server<br/>server.py<br/>Python 3.9+ stdlib<br/>:8765"]
+    REH[("Ensayo grabado<br/>Recorded rehearsal<br/>ensaio_v2.json")]
+    ENV[(".env<br/>clave IA · AI key<br/>no se sube<br/>not committed")]
+  end
+  O["☁️ Ollama Cloud<br/>/api/chat<br/>máx. · max 20 s"]
+  P -->|"usa<br/>uses"| UI
+  UI -->|"HTTP<br/>JSON"| API
+  API --> REH
+  API --> ENV
+  API --> O
+  classDef person fill:#08427B,color:#fff,stroke:#052E56
+  classDef cont fill:#438DD5,color:#fff,stroke:#2E6295
+  classDef ext fill:#8A8A8A,color:#fff,stroke:#6B6B6B
+  class P person
+  class UI,API,REH,ENV cont
+  class O ext

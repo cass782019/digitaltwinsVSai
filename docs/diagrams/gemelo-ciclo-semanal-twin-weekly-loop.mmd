@@ -1,0 +1,6 @@
+flowchart LR
+  A["Semana t<br/>Week t"] --> B["Demanda<br/>Demand"]
+  B --> C["Llega pedido y se vende<br/>Order arrives, sell<br/>falta = perdida<br/>short = lost"]
+  C --> E["Pedir hasta 1,6 semanas<br/>Order up to 1.6 weeks"]
+  E -->|"t + 1"| A
+  E -->|"t = 8"| H["Indicadores<br/>KPIs"]

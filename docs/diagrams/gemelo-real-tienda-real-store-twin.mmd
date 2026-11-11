@@ -1,0 +1,26 @@
+flowchart TB
+  subgraph FIS["🏬 Tienda real · Real store"]
+    POS["Cajas<br/>POS"]
+    ERP["ERP<br/>stock"]
+    SUP["Proveedores<br/>Suppliers"]
+    IOT["Sensores<br/>Sensors"]
+    EXT["Clima, promos<br/>Weather, promos"]
+  end
+  ING["Datos en vivo + históricos<br/>Live + historical data"]
+  STATE["Estado actual<br/>Current state"]
+  FC["Pronóstico (ML)<br/>Forecast (ML)"]
+  SIM["Gemelo: miles de escenarios<br/>Twin: thousands of scenarios"]
+  USE["👤 Gerentes + 🤖 IA generativa<br/>Managers + Generative AI<br/>deciden · decide"]
+  POS & ERP & SUP & IOT & EXT --> ING
+  ING --> STATE & FC
+  STATE & FC --> SIM
+  SIM <-->|"¿y si…? · what if…?"| USE
+  USE -.->|"acción → datos nuevos<br/>action → new data"| FIS
+  classDef store fill:#FFF4D6,stroke:#FDB913,color:#003E7B
+  classDef data fill:#E8F1FB,stroke:#438DD5,color:#003E7B
+  classDef twin fill:#438DD5,stroke:#2E6295,color:#fff
+  classDef use fill:#003E7B,stroke:#002A55,color:#fff
+  class POS,ERP,SUP,IOT,EXT store
+  class ING data
+  class STATE,FC,SIM twin
+  class USE use

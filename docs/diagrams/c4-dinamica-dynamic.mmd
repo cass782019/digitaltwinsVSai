@@ -1,0 +1,24 @@
+sequenceDiagram
+  autonumber
+  actor U as Presentador<br/>Presenter
+  participant B as Navegador<br/>Browser
+  participant S as server.py
+  participant AI as Ollama<br/>Cloud
+  participant T as Gemelo<br/>Twin
+  U->>B: ¿Y si…?<br/>What if…?
+  B->>S: POST /api/ask
+  S->>AI: PARSE<br/>parámetros · parameters
+  AI-->>S: delay = 2
+  S->>AI: GUESS<br/>sin calculadora · no calculator
+  AI-->>S: −25 %
+  S->>T: run_twin()
+  T-->>S: −35 %, 65 %
+  S->>AI: EXPLAIN<br/>con los números del gemelo<br/>with the twin's numbers
+  AI-->>S: 3 frases · 3 sentences
+  S-->>B: resultado · result
+  B-->>U: Paneles 1–4 · Panels 1–4
+  opt Sin internet · No internet
+    B->>S: POST /api/replay
+    S->>T: run_twin()
+    S-->>B: IA grabada + gemelo<br/>recorded AI + twin
+  end

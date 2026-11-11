@@ -1,0 +1,10 @@
+flowchart LR
+  M["Modelo digital · Digital model<br/>datos a mano · data by hand<br/>⬅ esta demo · this demo"]
+  S["Sombra digital · Digital shadow<br/>real → modelo, automático<br/>real → model, automatic"]
+  T["Gemelo digital · Digital twin<br/>ida y vuelta automática<br/>automatic, both ways"]
+  M -->|"+ datos en vivo · + live data"| S
+  S -->|"+ acción de vuelta · + action back"| T
+  classDef here fill:#FDB913,color:#003E7B,stroke:#003E7B
+  classDef lvl fill:#438DD5,color:#fff,stroke:#2E6295
+  class M here
+  class S,T lvl

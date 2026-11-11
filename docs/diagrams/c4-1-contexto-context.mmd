@@ -1,0 +1,12 @@
+flowchart LR
+  P["👤 Presentador y público<br/>Presenter and audience<br/>[Persona · Person]"]
+  D["🖥️ Demo Gemelo vs. IA<br/>Twin vs. AI demo<br/>[Sistema · Software system]<br/>Simula una tienda y la compara con la IA<br/>Simulates a store and compares it with the AI"]
+  O["☁️ Ollama Cloud<br/>[Sistema externo · External system]<br/>Modelos de lenguaje · Language models<br/>gpt-oss:120b · glm-5.3-flash"]
+  P -->|"Pregunta ¿y si…? / Asks what if…?<br/>[navegador · browser]"| D
+  D -->|"Interpretar, adivinar, explicar<br/>Parse, guess, explain<br/>[HTTPS + JSON]"| O
+  classDef person fill:#08427B,color:#fff,stroke:#052E56
+  classDef system fill:#1168BD,color:#fff,stroke:#0B4884
+  classDef ext fill:#8A8A8A,color:#fff,stroke:#6B6B6B
+  class P person
+  class D system
+  class O ext
